@@ -1,6 +1,11 @@
 "use server"
 
 import { supabaseAdmin } from "@/lib/supabase"
+import { z } from "zod"
+import { prisma } from "@/lib/prisma"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { revalidatePath } from "next/cache"
 
 const uploadSchema = z.object({
     title: z.string().optional(),
