@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,11 +15,15 @@ model User {
   image         String?
   password      String?
   role          String    @default("USER") // ADMIN, USER
+  status        String    @default("ACTIVE") // ACTIVE, EXPIRED, BLOCKED
+  origin        String    @default("DIRECT") // DIRECT, HOTMART, KIWIFY, GREEN
+  expiresAt     DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-  images        Image[]   // Images uploaded by this user
+  images        Image[]   
+  payments      Payment[]
 }
 
 model Account {
@@ -92,4 +97,26 @@ model AIModel {
   images    Image[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Integration {
+  id            String   @id @default(cuid())
+  gateway       String   @unique // HOTMART, KIWIFY, GREEN
+  apiKey        String?
+  webhookSecret String?
+  isActive      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  externalId    String   @unique // ID from the gateway
+  amount        Float
+  status        String   // paid, pending, refunded
+  gateway       String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

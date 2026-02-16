@@ -85,8 +85,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 asChild
               >
                 <Link
-                  href={`/?${categoryId ? `category=${categoryId}&` : ""}page=${currentPage + 1}`}
-                  scroll={false}
+                  href="/biblioteca"
                 >
                   Ver mais arquivos
                 </Link>

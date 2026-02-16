@@ -1,6 +1,6 @@
 "use client"
 
-import { Image as ImageType, Category, User, AIModel } from "@prisma/client"
+import { Image as ImageType, Category, User, AIModel } from "../../generated/prisma"
 import { Button } from "@/components/ui/button"
 import { Copy, Download, Check, Maximize2, ShieldAlert, Bug, Cpu } from "lucide-react"
 import { useState } from "react"

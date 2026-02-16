@@ -48,6 +48,8 @@ export const authOptions: NextAuthOptions = {
                     email: user.email,
                     name: user.name,
                     role: user.role,
+                    status: user.status,
+                    expiresAt: user.expiresAt,
                 }
             },
         }),
@@ -57,6 +59,8 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 session.user.id = token.id
                 session.user.role = token.role
+                session.user.status = token.status
+                session.user.expiresAt = token.expiresAt
             }
             return session
         },
@@ -64,6 +68,8 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.id = user.id
                 token.role = user.role
+                token.status = user.status
+                token.expiresAt = user.expiresAt
             }
             return token
         },

@@ -14,9 +14,14 @@ const sidebarItems = [
         icon: LayoutDashboard,
     },
     {
-        title: "Usuários",
-        href: "/admin/users",
+        title: "Membros",
+        href: "/admin/membros",
         icon: Users,
+    },
+    {
+        title: "Integrações",
+        href: "/admin/integracoes",
+        icon: Cpu,
     },
     {
         title: "Uploads",
@@ -60,8 +65,8 @@ export function Sidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-muted/40 ${isActive
-                                        ? "bg-muted/60 text-foreground"
-                                        : "text-muted-foreground hover:text-foreground"
+                                    ? "bg-muted/60 text-foreground"
+                                    : "text-muted-foreground hover:text-foreground"
                                     }`}
                             >
                                 <Icon className="h-4 w-4" />
