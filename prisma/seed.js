@@ -5,7 +5,7 @@ require('dotenv').config()
 const prisma = new PrismaClient()
 
 async function main() {
-    const email = 'admin@comunidade.com'
+    const email = 'jean.maringa@hotmail.com'
 
     // Check if admin exists
     const existingUser = await prisma.user.findUnique({
@@ -13,13 +13,13 @@ async function main() {
     })
 
     if (!existingUser) {
-        const password = 'admin'
+        const password = 'academy@123'
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const user = await prisma.user.create({
             data: {
                 email,
-                name: 'Admin',
+                name: 'Jean Maringa',
                 password: hashedPassword,
                 role: 'ADMIN',
             },
