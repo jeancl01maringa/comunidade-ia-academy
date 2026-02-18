@@ -1,8 +1,16 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('../src/generated/prisma')
+const { PrismaPg } = require('@prisma/adapter-pg')
+const { Pool } = require('pg')
 const bcrypt = require('bcryptjs')
 require('dotenv').config()
 
-const prisma = new PrismaClient()
+const connectionString = `${process.env.DATABASE_URL}`
+const pool = new Pool({
+    connectionString,
+    ssl: { rejectUnauthorized: false }
+})
+const adapter = new PrismaPg(pool)
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
     const email = 'jean.maringa@hotmail.com'
@@ -22,6 +30,7 @@ async function main() {
                 name: 'Jean Maringa',
                 password: hashedPassword,
                 role: 'ADMIN',
+                status: 'ACTIVE'
             },
         })
         console.log('Admin user created:', user)

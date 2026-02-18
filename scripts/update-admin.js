@@ -1,8 +1,16 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('../src/generated/prisma')
 const bcrypt = require('bcryptjs')
 require('dotenv').config()
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL
+        },
+    },
+})
+
+console.log('Database URL check:', process.env.DATABASE_URL ? 'Loaded' : 'NOT FOUND')
 
 async function main() {
     const email = 'jean.maringa@hotmail.com'
