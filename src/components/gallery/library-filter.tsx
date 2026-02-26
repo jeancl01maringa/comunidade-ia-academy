@@ -1,6 +1,6 @@
 "use client"
 
-import { Category } from "../../generated/prisma"
+import { Category } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
