@@ -125,10 +125,11 @@ export default function PlanosPage() {
                                     </div>
                                 ))}
                             </div>
-
-                            <Button variant="premium" size="xl" className="w-full rounded-xl">
-                                Assinar Agora
-                            </Button>
+                            <div className="pt-4 w-full">
+                                <Button size="lg" className="w-full rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 text-white border-0 py-6 text-lg">
+                                    Assinar Agora
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </section>
