@@ -33,10 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   if (searchQuery) {
-    where.OR = [
-      { title: { contains: searchQuery, mode: 'insensitive' } },
-      { prompt: { contains: searchQuery, mode: 'insensitive' } }
-    ]
+    where.title = { contains: searchQuery, mode: 'insensitive' }
   }
 
   const [images, totalImages] = await Promise.all([
