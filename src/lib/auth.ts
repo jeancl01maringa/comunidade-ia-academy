@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
                     id: user.id,
                     email: user.email,
                     name: user.name,
+                    image: user.image,
                     role: user.role,
                     status: user.status,
                     expiresAt: user.expiresAt,
@@ -61,15 +62,24 @@ export const authOptions: NextAuthOptions = {
                 session.user.role = token.role
                 session.user.status = token.status
                 session.user.expiresAt = token.expiresAt
+                session.user.image = token.image as string | null
+                session.user.name = token.name
             }
             return session
         },
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.id = user.id
                 token.role = user.role
                 token.status = user.status
                 token.expiresAt = user.expiresAt
+                token.image = user.image
+                token.name = user.name
+            }
+            // Allow updateSession() to patch token fields
+            if (trigger === "update" && session) {
+                if (session.image) token.image = session.image
+                if (session.name) token.name = session.name
             }
             return token
         },

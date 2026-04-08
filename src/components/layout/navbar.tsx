@@ -105,7 +105,7 @@ export function Navbar() {
                         </>
                     ) : (
                         <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 font-medium shadow-lg shadow-primary/10 border-t border-white/10">
-                            <Link href="/api/auth/signin">Login</Link>
+                            <a href="/api/auth/signin">Login</a>
                         </Button>
                     )}
                 </div>
