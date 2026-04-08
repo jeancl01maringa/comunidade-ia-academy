@@ -6,14 +6,16 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { User, Shield, CreditCard, MessageCircle, LogOut, Camera, Loader2, Check, Eye, EyeOff } from "lucide-react"
+import { User, Shield, CreditCard, MessageCircle, LogOut, Camera, Loader2, Check, Eye, EyeOff, Heart, Bookmark } from "lucide-react"
 import { compressImage } from "@/lib/image-optimization"
 import { updateProfile, uploadProfilePhoto, changePassword } from "./actions"
 import { toast } from "sonner"
+import { ImageCard } from "@/components/gallery/image-card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const WHATSAPP_URL = "https://wa.me/5544999419907?text=Ol%C3%A1%2C+preciso+de+ajuda+com+a+comunidade+IA+Academy+Pro."
 
-type Tab = "conta" | "assinatura" | "seguranca"
+type Tab = "conta" | "assinatura" | "curtidas" | "salvos" | "seguranca"
 
 interface AccountClientProps {
     user: {
@@ -22,6 +24,8 @@ interface AccountClientProps {
         email: string | null
         image: string | null
     }
+    likedImages: any[]
+    savedImages: any[]
     subscription: {
         status: string
         startDate: Date
@@ -34,7 +38,7 @@ interface AccountClientProps {
     } | null
 }
 
-export function AccountClient({ user, subscription }: AccountClientProps) {
+export function AccountClient({ user, subscription, likedImages, savedImages }: AccountClientProps) {
     const { update: updateSession } = useSession()
     const [activeTab, setActiveTab] = useState<Tab>("conta")
     const [loading, setLoading] = useState(false)
@@ -48,6 +52,8 @@ export function AccountClient({ user, subscription }: AccountClientProps) {
     const tabs = [
         { id: "conta" as Tab, label: "Minha Conta", icon: User },
         { id: "assinatura" as Tab, label: "Assinatura", icon: CreditCard },
+        { id: "curtidas" as Tab, label: "Curtidas", icon: Heart },
+        { id: "salvos" as Tab, label: "Salvos", icon: Bookmark },
         { id: "seguranca" as Tab, label: "Segurança", icon: Shield },
     ]
 
@@ -135,8 +141,8 @@ export function AccountClient({ user, subscription }: AccountClientProps) {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap w-full text-left ${activeTab === tab.id
-                                        ? "bg-blue-600/15 text-blue-400 border border-blue-500/20"
-                                        : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                                    ? "bg-blue-600/15 text-blue-400 border border-blue-500/20"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                                     }`}
                             >
                                 <Icon className="h-4 w-4 shrink-0" />
@@ -312,6 +318,58 @@ export function AccountClient({ user, subscription }: AccountClientProps) {
                                 </div>
                             )}
                         </div>
+                    </div>
+                )}
+
+                {/* ── TAB: CURTIDAS ── */}
+                {activeTab === "curtidas" && (
+                    <div className="space-y-6">
+                        <div>
+                            <h1 className="text-lg font-medium text-foreground">Minhas Curtidas</h1>
+                            <p className="text-sm text-muted-foreground mt-0.5">Artes que você curtiu recentemente.</p>
+                        </div>
+
+                        {likedImages.length > 0 ? (
+                            <div className="columns-1 sm:columns-2 gap-4 space-y-4">
+                                {likedImages.map((img) => (
+                                    <ImageCard key={img.id} image={img} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-20 bg-muted/10 rounded-2xl border border-dashed border-border">
+                                <Heart className="h-10 w-10 text-muted-foreground/30 mb-3" />
+                                <p className="text-muted-foreground text-sm">Você ainda não curtiu nenhuma arte.</p>
+                                <Button variant="link" className="text-blue-500" asChild>
+                                    <a href="/">Explorar Galeria</a>
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* ── TAB: SALVOS ── */}
+                {activeTab === "salvos" && (
+                    <div className="space-y-6">
+                        <div>
+                            <h1 className="text-lg font-medium text-foreground">Itens Salvos</h1>
+                            <p className="text-sm text-muted-foreground mt-0.5">Sua coleção pessoal de prompts salvos.</p>
+                        </div>
+
+                        {savedImages.length > 0 ? (
+                            <div className="columns-1 sm:columns-2 gap-4 space-y-4">
+                                {savedImages.map((img) => (
+                                    <ImageCard key={img.id} image={img} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-20 bg-muted/10 rounded-2xl border border-dashed border-border">
+                                <Bookmark className="h-10 w-10 text-muted-foreground/30 mb-3" />
+                                <p className="text-muted-foreground text-sm">Sua coleção está vazia.</p>
+                                <Button variant="link" className="text-blue-500" asChild>
+                                    <a href="/">Explorar Galeria</a>
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 )}
 

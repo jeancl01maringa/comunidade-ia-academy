@@ -19,6 +19,7 @@ model User {
   role          String    @default("USER") // ADMIN, USER
   status        String    @default("ACTIVE") // ACTIVE, EXPIRED, BLOCKED
   origin        String    @default("DIRECT") // DIRECT, HOTMART, KIWIFY, GREEN
+  phone         String?
   expiresAt     DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -27,6 +28,8 @@ model User {
   images        Image[]   
   payments      Payment[]
   subscriptions Subscription[]
+  likes         Like[]
+  saves         Save[]
 }
 
 model Plan {
@@ -116,8 +119,40 @@ model Image {
   userId      String?
   user        User?    @relation(fields: [userId], references: [id])
 
+  // Stats
+  views       Int      @default(0)
+  copyCount   Int      @default(0)
+  
+  likes       Like[]
+  saves       Save[]
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([aiModelId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  imageId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, imageId])
+}
+
+model Save {
+  id        String   @id @default(cuid())
+  userId    String
+  imageId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, imageId])
 }
 
 model Category {

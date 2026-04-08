@@ -12,9 +12,14 @@ import {
     Search,
     MessageCircle,
     Moon,
-    Sun
+    Sun,
+    LayoutDashboard,
+    Users,
+    Settings,
+    Crown
 } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useSession } from "next-auth/react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/providers/sidebar-context"
@@ -22,6 +27,7 @@ import { SearchDialog } from "@/components/gallery/search-dialog"
 
 export function AppSidebar() {
     const pathname = usePathname()
+    const { data: session } = useSession()
     const { theme, setTheme } = useTheme()
     const { isExpanded, toggleSidebar } = useSidebar()
     const [mounted, setMounted] = React.useState(false)
@@ -40,6 +46,12 @@ export function AppSidebar() {
 
     const secondaryItems = [
         { icon: Search, label: "Pesquisar", href: "/search" },
+    ]
+
+    const adminItems = [
+        { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+        { icon: Folder, label: "Modelos", href: "/admin/models" },
+        { icon: Users, label: "Assinantes", href: "/admin/subscribers" },
     ]
 
     const WHATSAPP_URL = "https://wa.me/5544999419907?text=Ol%C3%A1%2C+preciso+de+ajuda+com+a+comunidade+IA+Academy+Pro."
@@ -109,6 +121,44 @@ export function AppSidebar() {
                         </Link>
                     )
                 })}
+
+                {/* Admin Section */}
+                {session?.user?.role === "ADMIN" && (
+                    <>
+                        <div className={cn("mt-4 mb-2 flex items-center px-3", !isExpanded && "justify-center")}>
+                            {isExpanded ? (
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 transition-all">
+                                    Admin
+                                </span>
+                            ) : (
+                                <Crown className="h-3 w-3 text-muted-foreground/40" />
+                            )}
+                        </div>
+                        {adminItems.map((item) => {
+                            const isActive = pathname === item.href
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={cn(
+                                        "group relative flex h-10 items-center rounded-xl transition-all duration-200",
+                                        isExpanded ? "w-full px-3 gap-3" : "w-10 justify-center",
+                                        isActive
+                                            ? "bg-blue-600/10 text-blue-500 font-medium"
+                                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                                    )}
+                                >
+                                    <item.icon className="h-5 w-5 shrink-0" />
+                                    {isExpanded && (
+                                        <span className="text-sm animate-in fade-in slide-in-from-left-2 duration-300">
+                                            {item.label}
+                                        </span>
+                                    )}
+                                </Link>
+                            )
+                        })}
+                    </>
+                )}
 
                 <div className={cn("my-2 h-[1px] bg-border/50 transition-all", isExpanded ? "w-full mx-0" : "w-8")} />
 

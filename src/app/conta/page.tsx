@@ -12,7 +12,7 @@ export default async function ContaPage() {
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) redirect("/login")
 
-    const [user, subscription] = await Promise.all([
+    const [user, subscription, likedImages, savedImages] = await Promise.all([
         prisma.user.findUnique({
             where: { id: session.user.id },
             select: { id: true, name: true, email: true, image: true },
@@ -22,6 +22,34 @@ export default async function ContaPage() {
             include: { plan: true },
             orderBy: { createdAt: "desc" },
         }),
+        prisma.like.findMany({
+            where: { userId: session.user.id },
+            include: {
+                image: {
+                    include: {
+                        category: true,
+                        aiModel: true,
+                        user: { select: { id: true, name: true, image: true } },
+                        _count: { select: { likes: true, saves: true } }
+                    }
+                }
+            },
+            orderBy: { createdAt: "desc" }
+        }),
+        prisma.save.findMany({
+            where: { userId: session.user.id },
+            include: {
+                image: {
+                    include: {
+                        category: true,
+                        aiModel: true,
+                        user: { select: { id: true, name: true, image: true } },
+                        _count: { select: { likes: true, saves: true } }
+                    }
+                }
+            },
+            orderBy: { createdAt: "desc" }
+        })
     ])
 
     if (!user) redirect("/login")
@@ -32,6 +60,8 @@ export default async function ContaPage() {
             <main className="flex-1 w-full">
                 <AccountClient
                     user={user}
+                    likedImages={likedImages.map(l => l.image)}
+                    savedImages={savedImages.map(s => s.image)}
                     subscription={subscription ? {
                         status: subscription.status,
                         startDate: subscription.startDate,

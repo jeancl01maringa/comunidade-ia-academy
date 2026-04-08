@@ -2,8 +2,12 @@
 
 import { Image as ImageType, Category, User, AIModel } from "@prisma/client"
 import { Button } from "@/components/ui/button"
-import { Copy, Download, Check, Maximize2, ShieldAlert, Bug, Cpu } from "lucide-react"
-import { useState } from "react"
+import { Copy, Download, Check, Maximize2, ShieldAlert, Bug, Cpu, Lock, Heart, Bookmark } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEngagement } from "@/hooks/use-engagement"
+import { cn } from "@/lib/utils"
 import {
     Dialog,
     DialogContent,
@@ -20,19 +24,54 @@ type SerializedImage = Omit<ImageType, "createdAt" | "updatedAt"> & {
     category?: Category | null
     aiModel?: AIModel | null
     user?: Pick<User, "id" | "name" | "image"> | null
+    views?: number
+    copyCount?: number
+    _count?: {
+        likes: number
+        saves: number
+    }
 }
 
 export function ImageCard({ image }: { image: SerializedImage }) {
+    const { data: session } = useSession()
+    const router = useRouter()
     const [copied, setCopied] = useState(false)
     const [expanded, setExpanded] = useState(false)
+    const [isMounted, setIsMounted] = useState(false)
+
+    const {
+        likes,
+        saves,
+        isLiking,
+        isSaving,
+        trackView,
+        trackCopy,
+        toggleLike,
+        toggleSave
+    } = useEngagement(image.id, image._count?.likes || 0, image._count?.saves || 0)
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
+    const isLocked = !session || (session.user.role !== "ADMIN" && session.user.status !== "ACTIVE")
 
     const handleCopy = () => {
+        if (isLocked) {
+            router.push("/planos")
+            return
+        }
         navigator.clipboard.writeText(image.prompt)
         setCopied(true)
+        trackCopy()
         setTimeout(() => setCopied(false), 2000)
     }
 
     const handleDownload = () => {
+        if (isLocked) {
+            router.push("/planos")
+            return
+        }
         const link = document.createElement("a")
         link.href = image.url
         link.download = `image-${image.id}.png`
@@ -41,21 +80,42 @@ export function ImageCard({ image }: { image: SerializedImage }) {
         document.body.removeChild(link)
     }
 
+    const handleOpenChange = (open: boolean) => {
+        if (open) {
+            if (isLocked) {
+                router.push("/planos")
+                return
+            }
+            trackView()
+        }
+    }
+
     const isLongPrompt = image.prompt.length > 150
 
+    if (!isMounted) return null
+
     return (
-        <Dialog>
+        <Dialog onOpenChange={handleOpenChange}>
             <div className="group relative break-inside-avoid overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm transition-all hover:shadow-lg">
                 <DialogTrigger asChild>
                     <div className="relative w-full overflow-hidden cursor-pointer">
                         <img
                             src={image.url}
                             alt={image.title || image.prompt}
-                            className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                            className={cn(
+                                "w-full h-auto object-cover transition-all duration-300 group-hover:scale-105",
+                                isLocked && "grayscale blur-sm opacity-60"
+                            )}
                             loading="lazy"
                         />
                         {/* Overlay */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center">
+                            {isLocked && (
+                                <div className="bg-background/80 backdrop-blur-md p-3 rounded-full shadow-2xl border border-white/20 scale-90 group-hover:scale-100 transition-transform">
+                                    <Lock className="h-6 w-6 text-foreground" />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </DialogTrigger>
             </div>
@@ -95,8 +155,37 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                         {image.title || "Imagem Gerada por IA"}
                                     </DialogTitle>
                                 </DialogHeader>
-                                {/* Small utility actions */}
-                                <div className="flex items-center gap-3 pt-1">
+                                {/* Action Buttons: Like & Save */}
+                                <div className="flex items-center gap-2 pt-1 border-b border-border/50 pb-4">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={toggleLike}
+                                        disabled={isLiking}
+                                        className={cn(
+                                            "h-9 rounded-full px-4 gap-2 border-border/60 hover:bg-muted/40",
+                                            likes > 0 && "text-red-500 border-red-500/20 bg-red-500/5 hover:bg-red-500/10"
+                                        )}
+                                    >
+                                        <Heart className={cn("h-4 w-4", likes > 0 && "fill-current")} />
+                                        <span className="text-xs">{likes}</span>
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={toggleSave}
+                                        disabled={isSaving}
+                                        className={cn(
+                                            "h-9 rounded-full px-4 gap-2 border-border/60 hover:bg-muted/40",
+                                            saves > 0 && "text-blue-500 border-blue-500/20 bg-blue-500/5 hover:bg-blue-500/10"
+                                        )}
+                                    >
+                                        <Bookmark className={cn("h-4 w-4", saves > 0 && "fill-current")} />
+                                        <span className="text-xs">{saves}</span>
+                                    </Button>
+
+                                    <div className="flex-1" />
+
                                     <button className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors">
                                         <ShieldAlert className="h-3 w-3" /> Denunciar
                                     </button>
