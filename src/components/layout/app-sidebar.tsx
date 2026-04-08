@@ -34,15 +34,12 @@ export function AppSidebar() {
     const navItems = [
         { icon: Home, label: "Início", href: "/" },
         { icon: ImageIcon, label: "Galeria", href: "/gallery" },
-        { icon: Sparkles, label: "Design", href: "/design" },
+        { icon: Sparkles, label: "Ferramentas IA", href: "/design" },
         { icon: Folder, label: "Coleções", href: "/collections" },
     ]
 
     const secondaryItems = [
         { icon: Search, label: "Pesquisar", href: "/search" },
-        { icon: Hash, label: "Hashtags", href: "/tags" },
-        { icon: Library, label: "Biblioteca", href: "/library" },
-        { icon: Box, label: "3D", href: "/3d" },
     ]
 
     const isAuthPage = pathname === "/login"
