@@ -108,7 +108,7 @@ export function UploadDialog({ categories, aiModels }: UploadDialogProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label htmlFor="category">Categoria</Label>
+                            <Label htmlFor="category">Coleção</Label>
                             <Select name="categoryId" required>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Selecione..." />
