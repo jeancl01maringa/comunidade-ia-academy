@@ -151,3 +151,18 @@
   scrollbar-width: thin;
   scrollbar-color: oklch(0.45 0 0) oklch(0.25 0 0);
 }
+
+@utility bg-gold-gradient {
+  background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #B8860B 100%);
+}
+
+@utility text-gold {
+  color: #FFD700;
+  background: linear-gradient(135deg, #FFD700 0%, #FDB931 50%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility premium-button-shadow {
+  box-shadow: 0 10px 30px -10px rgba(184, 134, 11, 0.4);
+}

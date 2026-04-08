@@ -38,6 +38,19 @@ export function UploadDialog({ categories, aiModels }: UploadDialogProps) {
 
     async function handleSubmit(formData: FormData) {
         const file = formData.get("image") as File
+        const prompt = formData.get("prompt")?.toString().trim()
+        const categoryId = formData.get("categoryId")?.toString().trim()
+
+        if (!categoryId) {
+            toast.error("Por favor, selecione uma Categoria.")
+            return
+        }
+
+        if (!prompt || prompt.length < 3) {
+            toast.error("Por favor, preencha o Prompt utilizado.")
+            return
+        }
+
         if (!file || file.size === 0) {
             toast.error("Por favor, selecione uma imagem.")
             return
@@ -63,11 +76,11 @@ export function UploadDialog({ categories, aiModels }: UploadDialogProps) {
             } else {
                 toast.error(res?.message || "Erro ao enviar imagem")
             }
-        } catch (error) {
+        } catch (error: any) {
             setOptimizing(false)
             setLoading(false)
             console.error("Upload error:", error)
-            toast.error("Erro ao processar imagem.")
+            toast.error(`Erro ao processar imagem: ${error?.message || "Falha desconhecida"}`)
         }
     }
 

@@ -60,6 +60,7 @@ export async function POST(
 
         // 3. User & Access Provisioning
         const hashedPassword = await bcrypt.hash("ACADEMY@123", 10)
+        const ONE_YEAR = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
 
         // Use transaction to ensure consistency
         const result = await prisma.$transaction(async (tx) => {
@@ -69,8 +70,7 @@ export async function POST(
                 update: {
                     origin: gatewayId,
                     status: "ACTIVE",
-                    // Reset expiry or set it (e.g. 1 year from now)
-                    expiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                    expiresAt: ONE_YEAR
                 },
                 create: {
                     email: userEmail,
@@ -78,7 +78,7 @@ export async function POST(
                     password: hashedPassword,
                     origin: gatewayId,
                     status: "ACTIVE",
-                    expiresAt: new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+                    expiresAt: ONE_YEAR
                 }
             })
 
@@ -92,6 +92,32 @@ export async function POST(
                     status: "paid",
                     gateway: gatewayId,
                     userId: user.id
+                }
+            })
+
+            // Create or Update Subscription
+            // For now we assign to the first plan found or create a default "Premium" plan if none exists
+            let plan = await tx.plan.findFirst({
+                where: { isActive: true }
+            })
+
+            if (!plan) {
+                plan = await tx.plan.create({
+                    data: {
+                        name: "Premium",
+                        price: amount,
+                        features: ["Acesso Completo"],
+                        interval: "year"
+                    }
+                })
+            }
+
+            await tx.subscription.create({
+                data: {
+                    userId: user.id,
+                    planId: plan.id,
+                    status: "ACTIVE",
+                    endDate: ONE_YEAR
                 }
             })
 

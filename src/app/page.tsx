@@ -13,6 +13,7 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
+  console.log("IN PAGE: DATABASE_URL=", process.env.DATABASE_URL?.replace(/:[^:@]+@/, ":***@"))
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
   })
@@ -62,7 +63,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
           <CategoryFilter categories={categories} />
 
-          <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
+          <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
             {images.map((image) => (
               <div key={image.id} className="mb-4 break-inside-avoid">
                 <ImageCard

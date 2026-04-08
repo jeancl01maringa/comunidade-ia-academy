@@ -76,7 +76,7 @@ export default async function Biblioteca({ searchParams }: BibliotecaProps) {
 
                     {/* Grid */}
                     {images.length > 0 ? (
-                        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
+                        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
                             {images.map((image) => (
                                 <div key={image.id} className="mb-4 break-inside-avoid">
                                     <ImageCard

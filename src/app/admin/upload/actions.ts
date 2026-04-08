@@ -16,30 +16,46 @@ const uploadSchema = z.object({
 
 export async function uploadImage(prevState: any, formData: FormData) {
     try {
-        const title = formData.get("title") as string
-        const prompt = formData.get("prompt") as string
-        const categoryId = formData.get("categoryId") as string
-        const aiModelId = formData.get("aiModelId") as string
-        const imageFile = formData.get("image") as File
-        const optimizedImage = formData.get("optimizedImage") as string
+        const titleStr = formData.get("title")?.toString().trim() || undefined
+        const promptStr = formData.get("prompt")?.toString().trim() || ""
+        const categoryIdStr = formData.get("categoryId")?.toString().trim() || ""
+        const aiModelIdStr = formData.get("aiModelId")?.toString().trim() || undefined
+
+        const imageFile = formData.get("image") as File | null
+        const optimizedImage = formData.get("optimizedImage")?.toString() || ""
 
         if (!optimizedImage && (!imageFile || imageFile.size === 0)) {
-            return { message: "Imagem é obrigatória" }
+            return { success: false, message: "Imagem é obrigatória" }
+        }
+
+        const validation = uploadSchema.safeParse({
+            title: titleStr,
+            prompt: promptStr,
+            categoryId: categoryIdStr,
+            aiModelId: aiModelIdStr === "none" ? undefined : aiModelIdStr, // Ignore "none"
+        })
+
+        if (!validation.success) {
+            const errors = validation.error.flatten().fieldErrors
+            console.error("Validation failed:", errors)
+            // Extract the first error message to show to the user
+            const firstErrorKey = Object.keys(errors)[0]
+            const firstErrorMsg = errors[firstErrorKey as keyof typeof errors]?.[0]
+            return { success: false, message: `Erro: ${firstErrorMsg}` }
         }
 
         let finalUrl = ""
-
-        // Process and Upload to Supabase Storage
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.webp`
 
         let buffer: Buffer
         if (optimizedImage) {
-            // optimizedImage is a base64 string: data:image/webp;base64,...
             const base64Data = optimizedImage.split(",")[1]
             buffer = Buffer.from(base64Data, "base64")
-        } else {
+        } else if (imageFile) {
             const arrayBuffer = await imageFile.arrayBuffer()
             buffer = Buffer.from(arrayBuffer)
+        } else {
+            return { success: false, message: "Falha ao ler arquivo da imagem" }
         }
 
         const { data: uploadData, error: uploadError } = await supabaseAdmin
@@ -52,39 +68,32 @@ export async function uploadImage(prevState: any, formData: FormData) {
 
         if (uploadError) {
             console.error("Supabase Storage Error:", uploadError)
-            return { message: "Erro ao salvar imagem no storage." }
+            return { success: false, message: "A verificação do Supabase falhou. O Bucket 'images' existe? Confira no painel." }
         }
 
-        // Get Public URL
-        const { data: { publicUrl } } = supabaseAdmin
-            .storage
-            .from("images")
-            .getPublicUrl(fileName)
-
+        const { data: { publicUrl } } = supabaseAdmin.storage.from("images").getPublicUrl(fileName)
         finalUrl = publicUrl
 
-        const validation = uploadSchema.safeParse({
-            title,
-            prompt,
-            categoryId,
-            aiModelId,
-        })
+        const session = await getServerSession(authOptions)
+        let userId = session?.user?.id || null
 
-        if (!validation.success) {
-            const errors = validation.error.flatten().fieldErrors
-            return { message: "Erro de validação", errors }
+        // Verify if user actually exists in current DB (handles old session cookies)
+        if (userId) {
+            const userExists = await prisma.user.findUnique({ where: { id: userId } })
+            if (!userExists) {
+                userId = null
+            }
         }
 
-        // Get current user session
-        const session = await getServerSession(authOptions)
-        const userId = session?.user?.id || null
+        // If aiModelId is empty or 'none', pass null to Prisma
+        const finalAiModelId = (aiModelIdStr && aiModelIdStr !== "none" && aiModelIdStr !== "null") ? aiModelIdStr : null
 
         await prisma.image.create({
             data: {
-                title,
-                prompt,
-                categoryId,
-                aiModelId: aiModelId || null,
+                title: titleStr,
+                prompt: promptStr,
+                categoryId: categoryIdStr,
+                aiModelId: finalAiModelId,
                 userId,
                 url: finalUrl,
                 visible: true,
@@ -94,10 +103,10 @@ export async function uploadImage(prevState: any, formData: FormData) {
 
         revalidatePath("/admin/upload")
         revalidatePath("/")
-        return { success: true, message: "Upload realizado com sucesso!" }
+        return { success: true, message: "Upload realizado com sucesso! ✨" }
     } catch (error) {
-        console.error(error)
-        return { message: "Erro interno ao salvar imagem." }
+        console.error("Critical Upload Error:", error)
+        return { success: false, message: "Erro crítico no servidor ao salvar a imagem." }
     }
 }
 
