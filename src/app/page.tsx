@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { ImageCard } from "@/components/gallery/image-card"
 import { CategoryFilter } from "@/components/gallery/category-filter"
+import { GallerySort } from "@/components/gallery/gallery-sort"
 import { Navbar } from "@/components/layout/navbar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -9,11 +10,10 @@ import { Badge } from "@/components/ui/badge"
 export const dynamic = "force-dynamic"
 
 interface HomeProps {
-  searchParams: Promise<{ category?: string; page?: string; q?: string }>
+  searchParams: Promise<{ category?: string; page?: string; q?: string; sort?: string }>
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  console.log("IN PAGE: DATABASE_URL=", process.env.DATABASE_URL?.replace(/:[^:@]+@/, ":***@"))
   const categories = await prisma.category.findMany({
     orderBy: { name: "asc" },
   })
@@ -21,6 +21,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams
   const categoryId = params.category
   const searchQuery = params.q
+  const sort = params.sort || "recent"
   const currentPage = Number(params.page) || 1
   const pageSize = 40
   const limit = currentPage * pageSize
@@ -36,16 +37,27 @@ export default async function Home({ searchParams }: HomeProps) {
     where.title = { contains: searchQuery, mode: 'insensitive' }
   }
 
+  // Build Prisma orderBy clause
+  let orderBy: any = { createdAt: "desc" }
+  if (sort === "trending") {
+    orderBy = { views: "desc" }
+  } else if (sort === "old") {
+    orderBy = { createdAt: "asc" }
+  }
+
   const [images, totalImages] = await Promise.all([
     prisma.image.findMany({
       where,
       take: limit,
-      orderBy: { createdAt: "desc" },
+      orderBy,
       include: {
         category: true,
         aiModel: true,
         user: {
           select: { id: true, name: true, image: true }
+        },
+        _count: {
+          select: { likes: true, saves: true }
         }
       },
     }),
@@ -57,18 +69,24 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1 w-full pr-10 pl-0 py-10">
+      <main className="flex-1 w-full px-4 md:px-10 py-10">
         <div className="flex flex-col gap-8">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-3">
-              <h1 className="text-lg font-medium tracking-tight text-foreground/90">Galeria da Comunidade</h1>
-              <Badge variant="secondary" className="font-normal text-[10px] h-5">
-                {totalImages} Prompts
-              </Badge>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-3">
+                <h1 className="text-lg font-medium tracking-tight text-foreground/90">Galeria da Comunidade</h1>
+                <Badge variant="secondary" className="font-normal text-[10px] h-5">
+                  {totalImages} Prompts
+                </Badge>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                Explore imagens incríveis geradas por IA e seus prompts originais.
+              </p>
             </div>
-            <p className="text-muted-foreground text-sm">
-              Explore imagens incríveis geradas por IA e seus prompts originais.
-            </p>
+
+            <div className="flex items-center gap-2 self-end md:self-auto">
+              <GallerySort />
+            </div>
           </div>
 
           <CategoryFilter categories={categories} />

@@ -20,6 +20,7 @@ import {
     TableRow
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
 export const dynamic = "force-dynamic"
 
@@ -130,25 +131,25 @@ export default async function AdminDashboard() {
                                 title="Total Visualizações"
                                 value={totals._sum.views || 0}
                                 icon={Eye}
-                                percentage="+12%" // Placeholder
+                                color="blue"
                             />
                             <MetricCard
-                                title="Total Downloads"
+                                title="Total Prompts Copiados"
                                 value={totals._sum.copyCount || 0}
                                 icon={Download}
-                                percentage="+5%"
+                                color="indigo"
                             />
                             <MetricCard
-                                title="Likes e Salvos"
+                                title="Total Likes e Salvos"
                                 value={likesCount + savesCount}
                                 icon={Heart}
-                                percentage="+18%"
+                                color="red"
                             />
                             <MetricCard
                                 title="Usuários Engajados"
                                 value={engagedUsersCount}
                                 icon={Users}
-                                percentage="+24%"
+                                color="green"
                             />
                         </div>
 
@@ -244,22 +245,24 @@ export default async function AdminDashboard() {
     }
 }
 
-function MetricCard({ title, value, icon: Icon, percentage }: any) {
+function MetricCard({ title, value, icon: Icon, color }: any) {
+    const colors: any = {
+        blue: "text-blue-500 bg-blue-500/10",
+        indigo: "text-indigo-500 bg-indigo-500/10",
+        red: "text-red-500 bg-red-500/10",
+        green: "text-green-500 bg-green-500/10"
+    }
+
     return (
         <Card className="border-border bg-card/60 backdrop-blur-xl hover:translate-y-[-2px] transition-all">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{title}</CardTitle>
-                <div className="p-2 rounded-lg bg-blue-500/5 text-blue-500">
+                <div className={cn("p-2 rounded-lg", colors[color])}>
                     <Icon className="h-4 w-4" />
                 </div>
             </CardHeader>
             <CardContent>
                 <div className="text-2xl font-bold tracking-tight">{value.toLocaleString("pt-BR")}</div>
-                {percentage && (
-                    <p className="text-[10px] text-green-500 font-medium pt-1">
-                        {percentage} <span className="text-muted-foreground font-normal">desde o mês passado</span>
-                    </p>
-                )}
             </CardContent>
         </Card>
     )
