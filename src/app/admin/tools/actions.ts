@@ -2,6 +2,36 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { createClient } from "@supabase/supabase-js"
+
+function getSupabase() {
+    return createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+}
+
+export async function uploadToolLogo(formData: FormData) {
+    const base64 = formData.get("imageBase64")?.toString()
+    const toolId = formData.get("toolId")?.toString() || `tmp_${Date.now()}`
+
+    if (!base64) return { success: false, message: "Imagem inválida." }
+
+    const base64Data = base64.replace(/^data:image\/\w+;base64,/, "")
+    const buffer = Buffer.from(base64Data, "base64")
+    const supabase = getSupabase()
+    const fileName = `${toolId}.webp`
+
+    const { error } = await supabase.storage
+        .from("tools")
+        .upload(fileName, buffer, { contentType: "image/webp", upsert: true })
+
+    if (error) return { success: false, message: "Erro no upload: " + error.message }
+
+    const { data } = supabase.storage.from("tools").getPublicUrl(fileName)
+    return { success: true, imageUrl: `${data.publicUrl}?t=${Date.now()}` }
+}
+
 
 export async function createTool(formData: FormData) {
     const name = formData.get("name")?.toString().trim()
