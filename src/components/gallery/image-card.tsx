@@ -60,20 +60,20 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                 </DialogTrigger>
             </div>
 
-            <DialogContent className="sm:max-w-none md:w-[960px] w-[95vw] h-fit max-h-[95vh] md:max-h-[650px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
-                <div className="flex flex-col md:flex-row h-auto min-h-0">
+            <DialogContent className="sm:max-w-none md:w-[960px] w-full max-w-[calc(100%-1rem)] h-fit max-h-[95vh] md:max-h-[650px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
+                <div className="flex flex-col md:flex-row h-auto min-h-0 overflow-y-auto md:overflow-hidden">
                     {/* Left side: Image */}
-                    <div className="w-full md:w-[48%] bg-muted/20 flex items-center justify-center relative min-h-[300px] md:min-h-0 border-b md:border-b-0 md:border-r border-border p-5">
+                    <div className="w-full md:w-[48%] bg-muted/20 flex items-center justify-center relative min-h-[200px] md:min-h-0 border-b md:border-b-0 md:border-r border-border p-4 md:p-5">
                         <img
                             src={image.url}
                             alt={image.title || image.prompt}
-                            className="w-full h-auto object-contain max-h-[50vh] md:max-h-[610px] rounded-2xl shadow-2xl"
+                            className="w-full h-auto object-contain max-h-[40vh] md:max-h-[610px] rounded-xl md:rounded-2xl shadow-2xl"
                         />
                     </div>
 
                     {/* Right side: Information */}
-                    <div className="w-full md:w-[52%] flex flex-col p-6 overflow-y-auto scrollbar-dark">
-                        <div className="space-y-6 flex-1">
+                    <div className="w-full md:w-[52%] flex flex-col p-4 md:p-6 overflow-y-auto md:scrollbar-dark">
+                        <div className="space-y-4 md:space-y-6 flex-1">
                             {/* Tags Row: Category + AI Model */}
                             <div className="flex flex-wrap gap-2">
                                 {image.category && (
@@ -91,12 +91,12 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                             {/* Título */}
                             <div className="space-y-1">
                                 <DialogHeader>
-                                    <DialogTitle className="text-lg font-medium text-foreground leading-tight">
+                                    <DialogTitle className="text-base md:text-lg font-medium text-foreground leading-tight">
                                         {image.title || "Imagem Gerada por IA"}
                                     </DialogTitle>
                                 </DialogHeader>
                                 {/* Small utility actions */}
-                                <div className="flex items-center gap-3 pt-2">
+                                <div className="flex items-center gap-3 pt-1">
                                     <button className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors">
                                         <ShieldAlert className="h-3 w-3" /> Denunciar
                                     </button>
@@ -107,23 +107,23 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                             </div>
 
                             {/* Prompt Section */}
-                            <div className="space-y-3">
+                            <div className="space-y-2 md:space-y-3">
                                 <p className="text-[10px] font-medium uppercase text-muted-foreground tracking-widest">Prompt original</p>
                                 <div className="space-y-4">
-                                    <div className="text-sm text-foreground/90 leading-relaxed font-light bg-muted/20 p-4 rounded-xl border border-border">
+                                    <div className="text-sm text-foreground/90 leading-relaxed font-light bg-muted/20 p-3 md:p-4 rounded-xl border border-border">
                                         {isLongPrompt && !expanded ? (
                                             <div>
                                                 <p className="break-words">{image.prompt.slice(0, 150)}...</p>
                                                 <button
                                                     onClick={() => setExpanded(true)}
-                                                    className="text-blue-500 hover:text-blue-400 text-sm font-medium mt-3 focus:outline-none flex items-center gap-1"
+                                                    className="text-blue-500 hover:text-blue-400 text-sm font-medium mt-2 focus:outline-none flex items-center gap-1"
                                                 >
                                                     Veja mais <Maximize2 className="h-3 w-3" />
                                                 </button>
                                             </div>
                                         ) : (
                                             <div className="space-y-3">
-                                                <p className={`break-words ${isLongPrompt ? "max-h-[200px] md:max-h-[150px] overflow-y-auto pr-2 scrollbar-dark" : ""}`}>
+                                                <p className={`break-words ${isLongPrompt ? "max-h-[150px] md:max-h-[150px] overflow-y-auto pr-2 scrollbar-dark" : ""}`}>
                                                     {image.prompt}
                                                 </p>
                                                 {isLongPrompt && (
@@ -142,7 +142,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                     <Button
                                         variant="outline"
                                         size="default"
-                                        className="w-full bg-muted/20 border-border text-foreground hover:bg-muted/40 h-10 gap-2 font-medium"
+                                        className="w-full bg-muted/20 border-border text-foreground hover:bg-muted/40 h-9 md:h-10 gap-2 font-medium"
                                         onClick={handleCopy}
                                     >
                                         {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
@@ -153,8 +153,8 @@ export function ImageCard({ image }: { image: SerializedImage }) {
 
                             {/* Autor Row */}
                             {image.user && (
-                                <div className="flex items-center gap-3 py-3 border-y border-border">
-                                    <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
+                                <div className="flex items-center gap-3 py-2 md:py-3 border-y border-border">
+                                    <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 p-[2px]">
                                         <div className="h-full w-full rounded-full bg-background flex items-center justify-center overflow-hidden border border-border/50">
                                             {image.user.image ? (
                                                 <img src={image.user.image} alt={image.user.name || ""} className="h-full w-full object-cover" />
@@ -165,21 +165,21 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-[10px] text-muted-foreground">Criado por</p>
-                                        <p className="text-sm font-medium text-foreground truncate">{image.user.name || "Usuário"}</p>
+                                        <p className="text-xs md:text-sm font-medium text-foreground truncate">{image.user.name || "Usuário"}</p>
                                     </div>
-                                    <Button variant="outline" size="sm" className="h-8 text-[11px] bg-muted/20 border-border hover:bg-muted/40 text-foreground rounded-full px-4">
+                                    <Button variant="outline" size="sm" className="h-7 md:h-8 text-[10px] md:text-[11px] bg-muted/20 border-border hover:bg-muted/40 text-foreground rounded-full px-3 md:px-4">
                                         Seguir
                                     </Button>
                                 </div>
                             )}
 
-                            {/* Footer Action: Baixar imagem - MOVED HERE */}
-                            <div className="pt-2">
+                            {/* Footer Action: Baixar imagem */}
+                            <div className="pt-1">
                                 <Button
-                                    className="w-full py-7 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] transition-all text-white font-medium text-base shadow-xl shadow-blue-900/40 gap-3 border-t border-white/20"
+                                    className="w-full py-5 md:py-7 rounded-xl md:rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.01] transition-all text-white font-medium text-sm md:text-base shadow-lg shadow-blue-900/40 gap-3 border-t border-white/20"
                                     onClick={handleDownload}
                                 >
-                                    <Download className="h-5 w-5" /> Baixar Imagem
+                                    <Download className="h-4 w-4 md:h-5 md:w-5" /> Baixar Imagem
                                 </Button>
                             </div>
                         </div>
