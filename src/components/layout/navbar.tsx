@@ -86,9 +86,11 @@ export function Navbar() {
                                             </Link>
                                         </DropdownMenuItem>
                                     )}
-                                    <DropdownMenuItem className="focus:bg-accent focus:text-accent-foreground cursor-pointer">
-                                        <User className="mr-2 h-4 w-4" />
-                                        Perfil
+                                    <DropdownMenuItem asChild className="focus:bg-accent focus:text-accent-foreground cursor-pointer">
+                                        <Link href="/conta" className="w-full flex items-center">
+                                            <User className="mr-2 h-4 w-4" />
+                                            Perfil
+                                        </Link>
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator className="bg-border/50" />
                                     <DropdownMenuItem
