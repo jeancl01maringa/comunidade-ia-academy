@@ -4,6 +4,8 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { useSession, signOut } from "next-auth/react"
 import { Search, User, LogOut, Settings } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import {
@@ -16,10 +18,21 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { useSidebar } from "@/components/providers/sidebar-context"
+import { SearchDialog } from "@/components/gallery/search-dialog"
 
 export function Navbar() {
     const { data: session } = useSession()
     const { isExpanded } = useSidebar()
+    const router = useRouter()
+    const [searchQuery, setSearchQuery] = useState("")
+    const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (searchQuery.trim()) {
+            router.push(`/?q=${encodeURIComponent(searchQuery.trim())}`)
+        }
+    }
 
     return (
         <header className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-border/10">
@@ -37,13 +50,25 @@ export function Navbar() {
                 </div>
 
                 {/* Middle: Search Bar */}
-                <div className="flex-1 max-w-xl relative group hidden sm:block">
+                <form onSubmit={handleSearch} className="flex-1 max-w-xl relative group hidden sm:block">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-blue-500 transition-colors" />
                     <Input
-                        placeholder="Quero criar um..."
+                        placeholder="Pesquise por um prompt"
                         className="w-full bg-muted/40 border-border h-11 pl-11 rounded-xl text-foreground placeholder:text-muted-foreground focus:bg-muted/60 focus:border-blue-500/50 transition-all ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                </div>
+                </form>
+
+                {/* Mobile Search Button */}
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="sm:hidden h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                    onClick={() => setIsSearchOpen(true)}
+                >
+                    <Search className="h-5 w-5" />
+                </Button>
 
                 {/* Right: Actions */}
                 <div className="flex items-center gap-3 shrink-0">
@@ -110,6 +135,8 @@ export function Navbar() {
                     )}
                 </div>
             </div>
+
+            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
         </header>
     )
 }

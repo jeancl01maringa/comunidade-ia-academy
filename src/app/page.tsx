@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 export const dynamic = "force-dynamic"
 
 interface HomeProps {
-  searchParams: Promise<{ category?: string; page?: string }>
+  searchParams: Promise<{ category?: string; page?: string; q?: string }>
 }
 
 export default async function Home({ searchParams }: HomeProps) {
@@ -20,11 +20,24 @@ export default async function Home({ searchParams }: HomeProps) {
 
   const params = await searchParams
   const categoryId = params.category
+  const searchQuery = params.q
   const currentPage = Number(params.page) || 1
   const pageSize = 40
   const limit = currentPage * pageSize
 
-  const where = categoryId ? { categoryId, visible: true } : { visible: true }
+  // Build Prisma where clause
+  const where: any = { visible: true }
+
+  if (categoryId) {
+    where.categoryId = categoryId
+  }
+
+  if (searchQuery) {
+    where.OR = [
+      { title: { contains: searchQuery, mode: 'insensitive' } },
+      { prompt: { contains: searchQuery, mode: 'insensitive' } }
+    ]
+  }
 
   const [images, totalImages] = await Promise.all([
     prisma.image.findMany({

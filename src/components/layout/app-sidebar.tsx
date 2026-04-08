@@ -18,12 +18,14 @@ import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/providers/sidebar-context"
+import { SearchDialog } from "@/components/gallery/search-dialog"
 
 export function AppSidebar() {
     const pathname = usePathname()
     const { theme, setTheme } = useTheme()
     const { isExpanded, toggleSidebar } = useSidebar()
     const [mounted, setMounted] = React.useState(false)
+    const [isSearchOpen, setIsSearchOpen] = React.useState(false)
 
     React.useEffect(() => {
         setMounted(true)
@@ -110,30 +112,24 @@ export function AppSidebar() {
 
                 <div className={cn("my-2 h-[1px] bg-border/50 transition-all", isExpanded ? "w-full mx-0" : "w-8")} />
 
-                {secondaryItems.map((item) => {
-                    const isActive = pathname === item.href
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "group relative flex h-10 items-center rounded-xl transition-all duration-200",
-                                isExpanded ? "w-full px-3 gap-3" : "w-10 justify-center",
-                                isActive
-                                    ? "bg-muted text-foreground font-medium"
-                                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                            )}
-                        >
-                            <item.icon className="h-5 w-5 shrink-0" />
-                            {isExpanded && (
-                                <span className="text-sm animate-in fade-in slide-in-from-left-2 duration-300 group-hover:translate-x-1 transition-transform">
-                                    {item.label}
-                                </span>
-                            )}
-                            {!isExpanded && <span className="sr-only">{item.label}</span>}
-                        </Link>
-                    )
-                })}
+                <button
+                    onClick={() => setIsSearchOpen(true)}
+                    className={cn(
+                        "group relative flex h-10 items-center rounded-xl transition-all duration-200",
+                        isExpanded ? "w-full px-3 gap-3" : "w-10 justify-center",
+                        isSearchOpen
+                            ? "bg-muted text-foreground font-medium"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    )}
+                >
+                    <Search className="h-5 w-5 shrink-0" />
+                    {isExpanded && (
+                        <span className="text-sm animate-in fade-in slide-in-from-left-2 duration-300 group-hover:translate-x-1 transition-transform">
+                            Pesquisar
+                        </span>
+                    )}
+                    {!isExpanded && <span className="sr-only">Pesquisar</span>}
+                </button>
 
                 {/* Suporte via WhatsApp */}
                 <a
@@ -175,6 +171,8 @@ export function AppSidebar() {
                     <span className="sr-only">Alternar tema</span>
                 </Button>
             </div>
+
+            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
         </aside>
     )
 }
