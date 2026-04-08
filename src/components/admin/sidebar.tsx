@@ -19,6 +19,11 @@ const sidebarItems = [
         icon: Users,
     },
     {
+        title: "Assinantes",
+        href: "/admin/subscribers",
+        icon: Users,
+    },
+    {
         title: "Integrações",
         href: "/admin/integracoes",
         icon: Cpu,
