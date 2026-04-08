@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { LayoutDashboard, Users, Upload, LogOut, Image as ImageIcon, Tags, Cpu } from "lucide-react"
+import { LayoutDashboard, Users, Upload, LogOut, Image as ImageIcon, Tags, Cpu, Wrench } from "lucide-react"
 import { signOut } from "next-auth/react"
 
 const sidebarItems = [
@@ -37,6 +37,11 @@ const sidebarItems = [
         title: "Modelos IA",
         href: "/admin/models",
         icon: Cpu,
+    },
+    {
+        title: "Ferramentas",
+        href: "/admin/tools",
+        icon: Wrench,
     },
     {
         title: "Galeria Admin",
