@@ -53,7 +53,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <div className="flex items-center gap-3">
               <h1 className="text-lg font-medium tracking-tight text-foreground/90">Galeria da Comunidade</h1>
               <Badge variant="secondary" className="font-normal text-[10px] h-5">
-                {totalImages} artes
+                {totalImages} Prompts
               </Badge>
             </div>
             <p className="text-muted-foreground text-sm">
