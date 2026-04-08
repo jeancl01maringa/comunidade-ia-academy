@@ -29,7 +29,7 @@ const sidebarItems = [
         icon: Upload,
     },
     {
-        title: "Categorias",
+        title: "Coleções",
         href: "/admin/categories",
         icon: Tags,
     },

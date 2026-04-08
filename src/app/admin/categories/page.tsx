@@ -13,7 +13,7 @@ export default async function CategoriesPage() {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-lg font-medium">Gerenciar Categorias</h1>
+            <h1 className="text-lg font-medium">Gerenciar Coleções</h1>
 
             <div className="border p-4 rounded-lg bg-card">
                 <CategoryForm />
