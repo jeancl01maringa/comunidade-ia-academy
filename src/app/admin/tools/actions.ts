@@ -13,22 +13,22 @@ function getSupabase() {
 
 export async function uploadToolLogo(formData: FormData) {
     const base64 = formData.get("imageBase64")?.toString()
-    const toolId = formData.get("toolId")?.toString() || `tmp_${Date.now()}`
+    const toolId = formData.get("toolId")?.toString() || `tool_${Date.now()}`
 
     if (!base64) return { success: false, message: "Imagem inválida." }
 
     const base64Data = base64.replace(/^data:image\/\w+;base64,/, "")
     const buffer = Buffer.from(base64Data, "base64")
     const supabase = getSupabase()
-    const fileName = `${toolId}.webp`
+    const fileName = `tools/${toolId}.webp`
 
     const { error } = await supabase.storage
-        .from("tools")
+        .from("profiles")
         .upload(fileName, buffer, { contentType: "image/webp", upsert: true })
 
     if (error) return { success: false, message: "Erro no upload: " + error.message }
 
-    const { data } = supabase.storage.from("tools").getPublicUrl(fileName)
+    const { data } = supabase.storage.from("profiles").getPublicUrl(fileName)
     return { success: true, imageUrl: `${data.publicUrl}?t=${Date.now()}` }
 }
 
