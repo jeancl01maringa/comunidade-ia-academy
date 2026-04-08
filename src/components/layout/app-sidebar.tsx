@@ -10,9 +10,7 @@ import {
     Sparkles,
     Folder,
     Search,
-    Hash,
-    Library,
-    Box,
+    MessageCircle,
     Moon,
     Sun
 } from "lucide-react"
@@ -41,6 +39,8 @@ export function AppSidebar() {
     const secondaryItems = [
         { icon: Search, label: "Pesquisar", href: "/search" },
     ]
+
+    const WHATSAPP_URL = "https://wa.me/5544999419907?text=Ol%C3%A1%2C+preciso+de+ajuda+com+a+comunidade+IA+Academy+Pro."
 
     const isAuthPage = pathname === "/login"
 
@@ -134,6 +134,25 @@ export function AppSidebar() {
                         </Link>
                     )
                 })}
+
+                {/* Suporte via WhatsApp */}
+                <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                        "group relative flex h-10 items-center rounded-xl transition-all duration-200 text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                        isExpanded ? "w-full px-3 gap-3" : "w-10 justify-center"
+                    )}
+                >
+                    <MessageCircle className="h-5 w-5 shrink-0" />
+                    {isExpanded && (
+                        <span className="text-sm animate-in fade-in slide-in-from-left-2 duration-300 group-hover:translate-x-1 transition-transform">
+                            Suporte
+                        </span>
+                    )}
+                    {!isExpanded && <span className="sr-only">Suporte</span>}
+                </a>
 
                 <Button
                     variant="ghost"
