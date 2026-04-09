@@ -159,12 +159,12 @@ export function ImageCard({ image }: { image: SerializedImage }) {
 
                         {/* Composition Thumbnails Strip */}
                         {image.supportImages && image.supportImages.length > 0 && (
-                            <div className="flex items-stretch gap-2 w-full shrink-0 mt-2">
-                                {/* Main image thumb */}
+                            <div className="grid grid-cols-5 gap-2 w-full shrink-0 mt-2">
+                                {/* Main image thumb — always first */}
                                 <button
                                     onClick={() => setActiveImageIndex(-1)}
                                     className={cn(
-                                        "flex-1 h-14 md:h-16 rounded-md border-2 overflow-hidden transition-all duration-200",
+                                        "h-14 md:h-16 w-full rounded-md border-2 overflow-hidden transition-all duration-200",
                                         activeImageIndex === -1 ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                     )}
                                 >
@@ -176,7 +176,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                         key={idx}
                                         onClick={() => setActiveImageIndex(idx)}
                                         className={cn(
-                                            "flex-1 h-14 md:h-16 rounded-md border-2 overflow-hidden transition-all duration-200",
+                                            "h-14 md:h-16 w-full rounded-md border-2 overflow-hidden transition-all duration-200",
                                             activeImageIndex === idx ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                         )}
                                     >
