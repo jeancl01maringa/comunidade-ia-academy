@@ -116,11 +116,8 @@ export function SubscriberActions({ subscriber }: SubscriberActionsProps) {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel className="bg-muted hover:bg-muted/80">Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={handleResetPassword}
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                            >
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleResetPassword}>
                                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Redefinir Senha"}
                             </AlertDialogAction>
                         </AlertDialogFooter>
