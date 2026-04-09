@@ -17,6 +17,8 @@ import { formatDistanceToNow, format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { useState } from "react"
 import { MemberDetailsModal } from "./member-details-modal"
+import { EditUserDialog } from "./edit-user-dialog"
+import { Pencil } from "lucide-react"
 
 interface MembersTableProps {
     members: any[]
@@ -29,6 +31,7 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
     const searchParams = useSearchParams()
     const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "")
     const [selectedMember, setSelectedMember] = useState<any | null>(null)
+    const [editingMember, setEditingMember] = useState<any | null>(null)
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
@@ -107,14 +110,24 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
                                     {member.expiresAt ? format(new Date(member.expiresAt), "dd/MM/yyyy") : "Vitalício"}
                                 </TableCell>
                                 <TableCell className="text-right">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-8 w-8 rounded-lg hover:bg-foreground/5"
-                                        onClick={() => setSelectedMember(member)}
-                                    >
-                                        <Eye className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
+                                    <div className="flex items-center justify-end gap-1">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 rounded-lg hover:bg-foreground/5"
+                                            onClick={() => setEditingMember(member)}
+                                        >
+                                            <Pencil className="h-4 w-4 text-muted-foreground" />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-8 w-8 rounded-lg hover:bg-foreground/5"
+                                            onClick={() => setSelectedMember(member)}
+                                        >
+                                            <Eye className="h-4 w-4 text-muted-foreground" />
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))
@@ -133,6 +146,14 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
                     member={selectedMember}
                     isOpen={!!selectedMember}
                     onClose={() => setSelectedMember(null)}
+                />
+            )}
+
+            {editingMember && (
+                <EditUserDialog
+                    user={editingMember}
+                    isOpen={!!editingMember}
+                    onClose={() => setEditingMember(null)}
                 />
             )}
         </div>
