@@ -116,11 +116,10 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
                 </div>
 
                 <div
-                    className="border-2 border-dashed border-border/60 hover:border-primary/50 transition-colors rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer min-h-[200px]"
-                    onClick={() => fileInputRef.current?.click()}
+                    className="relative overflow-hidden border-2 border-dashed border-border/60 hover:border-primary/50 transition-colors rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer min-h-[200px]"
                 >
                     {preview ? (
-                        <div className="relative group">
+                        <div className="relative group z-10 pointer-events-none">
                             <img
                                 src={preview}
                                 alt="Logo Preview"
@@ -131,19 +130,19 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
                             </div>
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                        <div className="flex flex-col items-center gap-2 text-muted-foreground z-10 pointer-events-none">
                             <ImageIcon className="h-10 w-10 opacity-50" />
                             <p className="text-sm font-medium">Clique para fazer upload</p>
                             <p className="text-xs opacity-70">PNG, JPG ou WEBP (Max 800px)</p>
                         </div>
                     )}
                     <input
-                        ref={fileInputRef}
                         type="file"
                         name="logo"
                         accept="image/*"
-                        className="hidden"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                         onChange={handleFileChange}
+                        title="Upload logo"
                     />
                 </div>
 
