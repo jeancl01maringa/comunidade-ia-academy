@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { SessionProvider } from "@/components/providers/session-provider"
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+export function MainLayout({ children, logoArea }: { children: React.ReactNode, logoArea?: React.ReactNode }) {
     const { isExpanded } = useSidebar()
     const pathname = usePathname()
     const isLoginPage = pathname === "/login"
@@ -18,7 +18,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <div className="flex min-h-screen">
-            <AppSidebar />
+            <AppSidebar logoArea={logoArea} />
             <div
                 className={cn(
                     "flex-1 transition-all duration-300",

@@ -7,6 +7,7 @@ import { SidebarProvider } from "@/components/providers/sidebar-context";
 import { MainLayout } from "@/components/layout/main-layout";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { SiteLogo } from "@/components/ui/site-logo";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -40,7 +41,7 @@ export default function RootLayout({
           <AuthProvider>
             <TooltipProvider>
               <SidebarProvider>
-                <MainLayout>{children}</MainLayout>
+                <MainLayout logoArea={<SiteLogo />}>{children}</MainLayout>
                 <Toaster richColors position="bottom-right" />
               </SidebarProvider>
             </TooltipProvider>

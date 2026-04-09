@@ -4,7 +4,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { SiteLogo } from "@/components/ui/site-logo"
 import { LayoutDashboard, Users, Upload, LogOut, Image as ImageIcon, Tags, Cpu, Wrench, Settings } from "lucide-react"
 import { signOut } from "next-auth/react"
 
@@ -41,14 +40,14 @@ const sidebarGroups = [
     }
 ]
 
-export function Sidebar() {
+export function Sidebar({ logoArea }: { logoArea?: React.ReactNode }) {
     const pathname = usePathname()
 
     return (
         <div className="flex h-full flex-col border-r bg-muted/20">
             <div className="flex h-14 items-center px-10 overflow-hidden">
                 <Link href="/" className="flex items-center gap-2 font-medium overflow-hidden">
-                    <SiteLogo textClassName="text-base" className="h-6 w-auto" />
+                    {logoArea || <span className="text-foreground text-sm font-semibold">IA Academy</span>}
                 </Link>
             </div>
             <div className="flex-1 overflow-auto py-4">

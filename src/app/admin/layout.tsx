@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/admin/sidebar"
+import { SiteLogo } from "@/components/ui/site-logo"
 
 export default function AdminLayout({
     children,
@@ -8,7 +9,7 @@ export default function AdminLayout({
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] bg-background">
             <div className="hidden border-r border-white/5 bg-black/20 md:block">
-                <Sidebar />
+                <Sidebar logoArea={<SiteLogo textClassName="text-base" className="h-6 w-auto" />} />
             </div>
             <div className="flex flex-col">
                 <header className="flex h-16 items-center gap-4 bg-background/0 px-10 md:hidden">

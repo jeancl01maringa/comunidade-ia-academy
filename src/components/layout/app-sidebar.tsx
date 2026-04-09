@@ -24,9 +24,8 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/providers/sidebar-context"
 import { SearchDialog } from "@/components/gallery/search-dialog"
-import { SiteLogo } from "@/components/ui/site-logo"
 
-export function AppSidebar() {
+export function AppSidebar({ logoArea }: { logoArea?: React.ReactNode }) {
     const pathname = usePathname()
     const { data: session } = useSession()
     const { theme, setTheme } = useTheme()
@@ -76,7 +75,7 @@ export function AppSidebar() {
                 {isExpanded && (
                     <Link href="/" className="flex items-center gap-2 overflow-hidden animate-in fade-in slide-in-from-left-4 duration-300">
                         <React.Suspense fallback={<div className="h-8 w-24 animate-pulse bg-muted rounded"></div>}>
-                            <SiteLogo />
+                            {logoArea || <span className="font-medium text-foreground tracking-tighter text-lg whitespace-nowrap">IAACADEMY</span>}
                         </React.Suspense>
                     </Link>
                 )}
