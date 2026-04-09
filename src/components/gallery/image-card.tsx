@@ -164,7 +164,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                 <button
                                     onClick={() => setActiveImageIndex(-1)}
                                     className={cn(
-                                        "h-14 md:h-16 w-full rounded-md border-2 overflow-hidden transition-all duration-200",
+                                        "h-14 md:h-16 w-full aspect-square rounded-md border-2 overflow-hidden transition-all duration-200",
                                         activeImageIndex === -1 ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                     )}
                                 >
@@ -176,7 +176,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                         key={idx}
                                         onClick={() => setActiveImageIndex(idx)}
                                         className={cn(
-                                            "h-14 md:h-16 w-full rounded-md border-2 overflow-hidden transition-all duration-200",
+                                            "h-14 md:h-16 w-full aspect-square rounded-md border-2 overflow-hidden transition-all duration-200",
                                             activeImageIndex === idx ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                         )}
                                     >
