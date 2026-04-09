@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react"
 import { Upload, Loader2, Image as ImageIcon } from "lucide-react"
-import { useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { uploadLogo } from "./actions"
@@ -11,25 +10,10 @@ interface SettingsLogoFormProps {
     currentLogo: string | null
 }
 
-function SubmitButton() {
-    const { pending } = useFormStatus()
-    return (
-        <Button disabled={pending} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-            {pending ? (
-                <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Salvando...
-                </>
-            ) : (
-                "Salvar Alterações"
-            )}
-        </Button>
-    )
-}
-
 export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
     const [preview, setPreview] = useState<string | null>(currentLogo)
     const [optimizedImage, setOptimizedImage] = useState<string>("")
+    const [isLoading, setIsLoading] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +49,6 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
                 let width = img.width
                 let height = img.height
 
-                // Resize if needed
                 const MAX_WIDTH = 800
                 const MAX_HEIGHT = 800
 
@@ -93,26 +76,37 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
         }
     }
 
-    const clientAction = async (formData: FormData) => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+
         if (!optimizedImage) {
             toast.error("Por favor aguarde a otimização da imagem ou selecione uma imagem")
             return
         }
 
-        formData.append("optimizedImage", optimizedImage)
+        setIsLoading(true)
+        try {
+            const formData = new FormData()
+            formData.append("optimizedImage", optimizedImage)
 
-        const res = await uploadLogo(null, formData)
+            const res = await uploadLogo(null, formData)
 
-        if (res.success) {
-            toast.success(res.message)
-            // It replaces the navbar visually due to revalidatePath triggering a reload
-        } else {
-            toast.error(res.message)
+            if (res.success) {
+                toast.success(res.message)
+                window.location.reload() // Force UI update
+            } else {
+                toast.error(res.message)
+            }
+        } catch (err) {
+            toast.error("Ocorreu um erro ao enviar a imagem.")
+            console.error(err)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     return (
-        <form action={clientAction}>
+        <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6 p-6">
                 <div>
                     <h3 className="text-lg font-medium">Logotipo da Plataforma</h3>
@@ -153,7 +147,16 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
                     />
                 </div>
 
-                <SubmitButton />
+                <Button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Salvando...
+                        </>
+                    ) : (
+                        "Salvar Alterações"
+                    )}
+                </Button>
             </div>
         </form>
     )
