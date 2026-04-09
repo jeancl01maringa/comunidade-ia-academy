@@ -143,28 +143,29 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                 </DialogTrigger>
             </div>
 
-            <DialogContent className="sm:max-w-none md:w-[960px] w-[calc(100%-2rem)] max-w-full h-fit max-h-[90vh] md:max-h-[650px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
-                <div className="flex flex-col md:flex-row h-auto min-h-0 md:h-full max-h-[90vh] md:max-h-[650px] overflow-hidden">
+            <DialogContent className="sm:max-w-none md:w-[960px] w-[calc(100%-2rem)] max-w-full h-fit max-h-[90vh] md:max-h-[650px] p-0 overflow-y-auto md:overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
+                <div className="flex flex-col md:flex-row h-auto min-h-0 md:h-full max-h-none md:max-h-[650px]">
                     {/* Left side: Image and Thumbnails */}
-                    <div className="w-full md:w-[48%] bg-muted/20 flex flex-col relative h-full min-h-[300px] border-b md:border-b-0 md:border-r border-border p-4 md:p-5">
+                    <div className="w-full md:w-[48%] bg-muted/20 flex flex-col relative h-full min-h-[300px] border-b md:border-b-0 md:border-r border-border p-2 md:p-3">
 
                         {/* Main Viewer Area */}
                         <div className="flex-1 flex items-center justify-center w-full mb-4 overflow-hidden">
                             <img
                                 src={activeImageIndex === -1 ? image.url : (image.supportImages?.[activeImageIndex] || image.url)}
                                 alt={image.title || image.prompt}
-                                className="w-full h-full object-contain max-h-[35vh] md:max-h-[500px] rounded-xl shadow-2xl transition-all duration-300"
+                                className="w-full h-full object-contain max-h-[40vh] md:max-h-[500px] rounded-lg shadow-xl transition-all duration-300"
                             />
                         </div>
 
                         {/* Composition Thumbnails Strip */}
                         {image.supportImages && image.supportImages.length > 0 && (
-                            <div className="flex items-center justify-start gap-2 md:gap-3 w-full self-end shrink-0 overflow-x-auto pb-1 scrollbar-none">
+                            <div className="flex items-stretch gap-2 w-full shrink-0 mt-2">
+                                {/* Main image thumb */}
                                 <button
                                     onClick={() => setActiveImageIndex(-1)}
                                     className={cn(
-                                        "h-14 w-14 md:h-16 md:w-16 shrink-0 rounded-xl border-2 overflow-hidden transition-all duration-200",
-                                        activeImageIndex === -1 ? "border-blue-500 shadow-lg shadow-blue-500/20 scale-105 z-10" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
+                                        "flex-1 h-14 md:h-16 rounded-md border-2 overflow-hidden transition-all duration-200",
+                                        activeImageIndex === -1 ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                     )}
                                 >
                                     <img src={image.url} className="w-full h-full object-cover" />
@@ -175,8 +176,8 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                         key={idx}
                                         onClick={() => setActiveImageIndex(idx)}
                                         className={cn(
-                                            "h-14 w-14 md:h-16 md:w-16 shrink-0 rounded-xl border-2 overflow-hidden transition-all duration-200",
-                                            activeImageIndex === idx ? "border-blue-500 shadow-lg shadow-blue-500/20 scale-105 z-10" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
+                                            "flex-1 h-14 md:h-16 rounded-md border-2 overflow-hidden transition-all duration-200",
+                                            activeImageIndex === idx ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                         )}
                                     >
                                         <img src={supUrl} className="w-full h-full object-cover" />
@@ -187,9 +188,9 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                     </div>
 
                     {/* Right side: Information */}
-                    <div className="w-full md:w-[52%] flex flex-col h-full bg-background relative">
-                        {/* Scrollable Main Content */}
-                        <div className="flex-1 p-4 md:p-6 overflow-y-auto md:scrollbar-dark">
+                    <div className="w-full md:w-[52%] flex flex-col h-auto md:h-full bg-background relative">
+                        {/* Scrollable Main Content — scroll works on both mobile and desktop */}
+                        <div className="flex-1 p-4 md:p-6 overflow-y-auto scrollbar-dark">
                             <div className="space-y-4 md:space-y-6">
                                 {/* Tags Row: Category + AI Model */}
                                 <div className="flex flex-wrap gap-2">
@@ -336,7 +337,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                         </div>
 
                         {/* Footer Action: Pinned Download Button */}
-                        <div className="shrink-0 p-4 md:p-6 border-t border-border bg-background z-10 w-full relative">
+                        <div className="sticky bottom-0 shrink-0 p-4 md:p-6 border-t border-border bg-background z-20 w-full">
                             <Button
                                 className="w-full py-5 md:py-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.01] transition-all text-white font-medium text-sm md:text-base shadow-lg shadow-blue-900/40 gap-3 border-t border-white/20"
                                 onClick={handleDownload}
