@@ -54,7 +54,13 @@ export function ImageCard({ image }: { image: SerializedImage }) {
         setIsMounted(true)
     }, [])
 
-    const isLocked = !session || (session.user.role !== "ADMIN" && session.user.status !== "ACTIVE")
+    const isPremium = session?.user?.role === "ADMIN" || (
+        session?.user?.status === "ACTIVE" &&
+        session?.user?.expiresAt &&
+        new Date(session.user.expiresAt) > new Date()
+    )
+
+    const isLocked = !isPremium
 
     const handleCopy = () => {
         if (isLocked) {
