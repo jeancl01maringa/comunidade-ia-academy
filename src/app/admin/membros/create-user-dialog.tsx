@@ -134,9 +134,10 @@ export function CreateUserDialog() {
                                         <SelectValue placeholder="Escolha a duração" />
                                     </SelectTrigger>
                                     <SelectContent>
+                                        <SelectItem value="1day">01 Dia</SelectItem>
                                         <SelectItem value="7days">07 Dias</SelectItem>
-                                        <SelectItem value="1month">01 Mês</SelectItem>
-                                        <SelectItem value="1year">Anual (365 dias)</SelectItem>
+                                        <SelectItem value="1month">30 Dias (01 Mês)</SelectItem>
+                                        <SelectItem value="1year">Anual (365 Dias)</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>

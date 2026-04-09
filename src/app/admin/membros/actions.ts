@@ -83,7 +83,8 @@ export async function createManualUser(formData: FormData) {
 
         if (access === "PREMIUM") {
             expiresAt = new Date()
-            if (duration === "7days") expiresAt.setDate(expiresAt.getDate() + 7)
+            if (duration === "1day") expiresAt.setDate(expiresAt.getDate() + 1)
+            else if (duration === "7days") expiresAt.setDate(expiresAt.getDate() + 7)
             else if (duration === "1month") expiresAt.setMonth(expiresAt.getMonth() + 1)
             else if (duration === "1year") expiresAt.setFullYear(expiresAt.getFullYear() + 1)
         }
@@ -174,7 +175,8 @@ export async function updateManualUser(formData: FormData) {
             const currentUser = await prisma.user.findUnique({ where: { id } })
             expiresAt = currentUser?.expiresAt ? new Date(currentUser.expiresAt) : new Date()
 
-            if (duration === "7days") expiresAt.setDate(new Date().getDate() + 7)
+            if (duration === "1day") expiresAt.setDate(new Date().getDate() + 1)
+            else if (duration === "7days") expiresAt.setDate(new Date().getDate() + 7)
             else if (duration === "1month") expiresAt.setMonth(new Date().getMonth() + 1)
             else if (duration === "1year") expiresAt.setFullYear(new Date().getFullYear() + 1)
         }
