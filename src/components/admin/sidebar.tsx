@@ -35,7 +35,6 @@ const sidebarGroups = [
         items: [
             { title: "Integrações", href: "/admin/integracoes", icon: Cpu },
             { title: "Personalizar", href: "/admin/settings", icon: Settings },
-            { title: "Galeria Admin", href: "/admin/gallery", icon: ImageIcon },
         ]
     }
 ]
