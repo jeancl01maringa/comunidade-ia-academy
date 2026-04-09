@@ -39,6 +39,15 @@ export default async function SubscribersPage() {
         }
     })
 
+    const getOriginBadge = (origin: string) => {
+        switch (origin.toUpperCase()) {
+            case "HOTMART": return "bg-orange-500/10 text-orange-500 border-none";
+            case "KIWIFY": return "bg-green-500/10 text-green-500 border-none";
+            case "GREEN": return "bg-teal-500/10 text-teal-500 border-none";
+            default: return "border-border/60 text-muted-foreground";
+        }
+    }
+
     return (
         <div className="flex flex-col gap-6 p-4 md:p-8">
             <div className="flex flex-col gap-1">
@@ -92,7 +101,7 @@ export default async function SubscribersPage() {
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant="outline" className="border-border/60 text-muted-foreground uppercase text-[10px] font-bold">
+                                        <Badge variant="outline" className={`uppercase text-[10px] font-bold ${getOriginBadge(subscriber.origin)}`}>
                                             {subscriber.origin}
                                         </Badge>
                                     </TableCell>

@@ -42,17 +42,17 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
     const getStatusBadge = (status: string, expiresAt?: Date) => {
         const isExpired = expiresAt && new Date(expiresAt) < new Date()
 
-        if (status === "BLOCKED") return <Badge variant="destructive" className="bg-red-500/10 text-red-500 border-none px-2 rounded-lg">Bloqueado</Badge>
-        if (isExpired) return <Badge variant="outline" className="text-muted-foreground border-border/50 px-2 rounded-lg">Expirado</Badge>
-        return <Badge variant="secondary" className="bg-green-500/10 text-green-500 border-none px-2 rounded-lg">Ativo</Badge>
+        if (status === "BLOCKED") return <Badge variant="destructive" className="bg-red-500/10 text-red-500 border-none px-2 rounded-lg font-medium">Bloqueado</Badge>
+        if (isExpired) return <Badge variant="outline" className="text-muted-foreground border-border/50 px-2 rounded-lg font-medium">Expirado</Badge>
+        return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-none px-2 rounded-lg font-medium">Ativo</Badge>
     }
 
     const getOriginBadge = (origin: string) => {
         switch (origin) {
-            case "HOTMART": return <Badge variant="outline" className="border-orange-500/30 text-orange-500 px-2 rounded-lg">Hotmart</Badge>
-            case "KIWIFY": return <Badge variant="outline" className="border-green-500/30 text-green-500 px-2 rounded-lg">Kiwify</Badge>
-            case "GREEN": return <Badge variant="outline" className="border-emerald-500/30 text-emerald-500 px-2 rounded-lg">Green</Badge>
-            default: return <Badge variant="outline" className="border-border/50 text-muted-foreground px-2 rounded-lg">Direto</Badge>
+            case "HOTMART": return <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-none px-2 rounded-lg uppercase text-[10px] font-bold">Hotmart</Badge>
+            case "KIWIFY": return <Badge variant="outline" className="bg-green-500/10 text-green-500 border-none px-2 rounded-lg uppercase text-[10px] font-bold">Kiwify</Badge>
+            case "GREEN": return <Badge variant="outline" className="bg-teal-500/10 text-teal-500 border-none px-2 rounded-lg uppercase text-[10px] font-bold">Green</Badge>
+            default: return <Badge variant="outline" className="border-border/50 text-muted-foreground px-2 rounded-lg uppercase text-[10px] font-bold">{origin}</Badge>
         }
     }
 
