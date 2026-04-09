@@ -1,5 +1,6 @@
 import { getMembers } from "./actions"
 import { MembersTable } from "./members-table"
+import { CreateUserDialog } from "./create-user-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Users } from "lucide-react"
 
@@ -28,6 +29,8 @@ export default async function MembrosPage({ searchParams }: MembersPageProps) {
                         Gerencie todos os usuários e seus acessos à plataforma.
                     </p>
                 </div>
+
+                <CreateUserDialog />
             </div>
 
             <div className="bg-card border border-border/50 rounded-3xl overflow-hidden min-h-[500px]">

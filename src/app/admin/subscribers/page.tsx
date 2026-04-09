@@ -44,6 +44,7 @@ export default async function SubscribersPage() {
             case "HOTMART": return "bg-orange-500/10 text-orange-500 border-none";
             case "KIWIFY": return "bg-green-500/10 text-green-500 border-none";
             case "GREEN": return "bg-teal-500/10 text-teal-500 border-none";
+            case "MANUAL": return "bg-blue-500/10 text-blue-500 border-none";
             default: return "border-border/60 text-muted-foreground";
         }
     }

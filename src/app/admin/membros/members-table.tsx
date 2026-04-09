@@ -48,12 +48,14 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
     }
 
     const getOriginBadge = (origin: string) => {
-        switch (origin) {
-            case "HOTMART": return <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-none px-2 rounded-lg uppercase text-[10px] font-bold">Hotmart</Badge>
-            case "KIWIFY": return <Badge variant="outline" className="bg-green-500/10 text-green-500 border-none px-2 rounded-lg uppercase text-[10px] font-bold">Kiwify</Badge>
-            case "GREEN": return <Badge variant="outline" className="bg-teal-500/10 text-teal-500 border-none px-2 rounded-lg uppercase text-[10px] font-bold">Green</Badge>
-            default: return <Badge variant="outline" className="border-border/50 text-muted-foreground px-2 rounded-lg uppercase text-[10px] font-bold">{origin}</Badge>
+        const styles: Record<string, string> = {
+            HOTMART: "bg-orange-500/10 text-orange-500 border-none",
+            KIWIFY: "bg-green-500/10 text-emerald-500 border-none",
+            GREEN: "bg-teal-500/10 text-teal-500 border-none",
+            MANUAL: "bg-blue-500/10 text-blue-500 border-none",
         }
+        const style = styles[origin?.toUpperCase()] || "bg-foreground/5 text-muted-foreground border-none"
+        return <Badge variant="outline" className={`${style} px-2 rounded-lg uppercase text-[10px] font-bold`}>{origin || "N/A"}</Badge>
     }
 
     return (

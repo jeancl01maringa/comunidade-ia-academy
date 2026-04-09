@@ -1,0 +1,156 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogDescription
+} from "@/components/ui/dialog"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { UserPlus, Loader2, CheckCircle2 } from "lucide-react"
+import { toast } from "sonner"
+import { createManualUser } from "./actions"
+
+export function CreateUserDialog() {
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [accessLevel, setAccessLevel] = useState("FREE")
+
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        setLoading(true)
+
+        const formData = new FormData(e.currentTarget)
+        formData.set("access", accessLevel)
+
+        const result = await createManualUser(formData)
+
+        setLoading(false)
+
+        if (result?.error) {
+            toast.error(result.error)
+        } else {
+            toast.success("Usuário criado com sucesso!", {
+                description: "A senha padrão temporary é: 12345678",
+                icon: <CheckCircle2 className="h-5 w-5 text-green-500" />
+            })
+            setOpen(false)
+        }
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20 hover:scale-105 transition-all gap-2 rounded-xl">
+                    <UserPlus className="h-4 w-4" />
+                    Criar Usuário
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[450px] bg-background/95 backdrop-blur-xl border border-border">
+                <DialogHeader>
+                    <DialogTitle className="text-xl">Novo Usuário</DialogTitle>
+                    <DialogDescription>
+                        Crie um usuário manualmente na plataforma. Eles receberão a senha padrão <strong>12345678</strong> inicial.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <form onSubmit={onSubmit} className="space-y-5 py-4">
+                    <div className="space-y-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="name">Nome Completo <span className="text-red-500">*</span></Label>
+                            <Input
+                                id="name"
+                                name="name"
+                                placeholder="João da Silva"
+                                required
+                                className="bg-muted/40 border-border/50"
+                            />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="email">E-mail <span className="text-red-500">*</span></Label>
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="joao@exemplo.com"
+                                required
+                                className="bg-muted/40 border-border/50"
+                            />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="phone">Telefone (Opcional)</Label>
+                            <Input
+                                id="phone"
+                                name="phone"
+                                placeholder="(11) 99999-9999"
+                                className="bg-muted/40 border-border/50"
+                            />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label>Nível de Acesso</Label>
+                            <Select value={accessLevel} onValueChange={setAccessLevel}>
+                                <SelectTrigger className="bg-muted/40 border-border/50">
+                                    <SelectValue placeholder="Selecione o acesso" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="FREE">Usuário Grátis (Membro)</SelectItem>
+                                    <SelectItem value="PREMIUM">Assinante Premium</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {accessLevel === "PREMIUM" && (
+                            <div className="grid gap-2 fade-in animate-in">
+                                <Label htmlFor="duration">Duração do Vencimento</Label>
+                                <Select name="duration" defaultValue="1month">
+                                    <SelectTrigger className="bg-muted/40 border-border/50">
+                                        <SelectValue placeholder="Escolha a duração" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="7days">07 Dias</SelectItem>
+                                        <SelectItem value="1month">01 Mês</SelectItem>
+                                        <SelectItem value="1year">Anual (365 dias)</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-2">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => setOpen(false)}
+                            className="rounded-xl"
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-lg shadow-blue-500/20"
+                        >
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Criar Usuário
+                        </Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
+}
