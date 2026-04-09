@@ -39,7 +39,7 @@ export function AppSidebar({ logoArea }: { logoArea?: React.ReactNode }) {
 
     const navItems = [
         { icon: Home, label: "Início", href: "/" },
-        { icon: ImageIcon, label: "Galeria", href: "/gallery" },
+        { icon: ImageIcon, label: "Galeria", href: "/biblioteca" },
         { icon: Sparkles, label: "Ferramentas IA", href: "/design" },
         { icon: Folder, label: "Coleções", href: "/collections" },
     ]
