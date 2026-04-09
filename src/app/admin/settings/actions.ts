@@ -50,11 +50,13 @@ export async function uploadLogo(prevState: any, formData: FormData) {
         const { data: { publicUrl } } = supabaseAdmin.storage.from("images").getPublicUrl(fileName)
         finalUrl = publicUrl
 
+        const settingKey = formData.get("settingKey")?.toString() || "site_logo"
+
         // Upsert into SystemSetting
         await prisma.systemSetting.upsert({
-            where: { key: "site_logo" },
+            where: { key: settingKey },
             update: { value: finalUrl },
-            create: { key: "site_logo", value: finalUrl }
+            create: { key: settingKey, value: finalUrl }
         })
 
         revalidatePath("/", "layout")

@@ -20,7 +20,7 @@ import {
 import { useSidebar } from "@/components/providers/sidebar-context"
 import { SearchDialog } from "@/components/gallery/search-dialog"
 
-export function Navbar() {
+export function Navbar({ logoArea }: { logoArea?: React.ReactNode }) {
     const { data: session } = useSession()
     const { isExpanded } = useSidebar()
     const router = useRouter()
@@ -37,15 +37,18 @@ export function Navbar() {
     return (
         <header className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-border/10">
             <div className="w-full h-20 flex items-center justify-between gap-6 pr-10 pl-0">
-                {/* Left: Logo (Hidden if sidebar is expanded) */}
                 <div className={cn("flex items-center gap-2 shrink-0 transition-all duration-300", isExpanded ? "opacity-0 pointer-events-none w-0 overflow-hidden" : "opacity-100")}>
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="h-8 w-8 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/20">
-                            <span className="text-white font-medium text-lg italic">IA</span>
-                        </div>
-                        <span className="font-medium text-foreground tracking-tighter text-lg">
-                            IAACADEMY
-                        </span>
+                        {logoArea || (
+                            <>
+                                <div className="h-8 w-8 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/20">
+                                    <span className="text-white font-medium text-lg italic">IA</span>
+                                </div>
+                                <span className="font-medium text-foreground tracking-tighter text-lg">
+                                    IAACADEMY
+                                </span>
+                            </>
+                        )}
                     </Link>
                 </div>
 

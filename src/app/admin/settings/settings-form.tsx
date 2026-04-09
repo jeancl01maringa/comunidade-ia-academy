@@ -7,10 +7,13 @@ import { toast } from "sonner"
 import { uploadLogo } from "./actions"
 
 interface SettingsLogoFormProps {
-    currentLogo: string | null
+    title: string;
+    description: string;
+    settingKey: string;
+    currentLogo: string | null;
 }
 
-export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
+export function SettingsLogoForm({ title, description, settingKey, currentLogo }: SettingsLogoFormProps) {
     const [preview, setPreview] = useState<string | null>(currentLogo)
     const [optimizedImage, setOptimizedImage] = useState<string>("")
     const [isLoading, setIsLoading] = useState(false)
@@ -88,6 +91,7 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
         try {
             const formData = new FormData()
             formData.append("optimizedImage", optimizedImage)
+            formData.append("settingKey", settingKey)
 
             const res = await uploadLogo(null, formData)
 
@@ -109,9 +113,9 @@ export function SettingsLogoForm({ currentLogo }: SettingsLogoFormProps) {
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6 p-6">
                 <div>
-                    <h3 className="text-lg font-medium">Logotipo da Plataforma</h3>
+                    <h3 className="text-lg font-medium">{title}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                        Faça o upload do logo que aparecerá na barra superior para todos os usuários.
+                        {description}
                     </p>
                 </div>
 

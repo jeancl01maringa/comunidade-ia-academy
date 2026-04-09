@@ -2,32 +2,44 @@ import { prisma } from "@/lib/prisma"
 import { unstable_cache } from "next/cache"
 import Image from "next/image"
 
-const getLogoQuery = unstable_cache(
+const getLogosQuery = unstable_cache(
     async () => {
         try {
-            const setting = await prisma.systemSetting.findUnique({
-                where: { key: "site_logo" }
+            const settings = await prisma.systemSetting.findMany({
+                where: { key: { in: ["site_logo_dark", "site_logo_light", "site_logo"] } }
             })
-            return setting?.value || null
+            return {
+                dark: settings.find(s => s.key === "site_logo_dark")?.value || settings.find(s => s.key === "site_logo")?.value || null,
+                light: settings.find(s => s.key === "site_logo_light")?.value || settings.find(s => s.key === "site_logo")?.value || null
+            }
         } catch (error) {
-            return null
+            return { dark: null, light: null }
         }
     },
-    ["site_logo_setting"],
+    ["site_logos_setting"],
     { revalidate: 60 } // Cache for 60 seconds
 )
 
 export async function SiteLogo({ className, textClassName }: { className?: string, textClassName?: string }) {
-    const logoUrl = await getLogoQuery()
+    const logos = await getLogosQuery()
 
-    if (logoUrl) {
+    if (logos.dark || logos.light) {
         return (
-            <div className={`relative flex items-center ${className || "h-8 w-auto min-w-[120px]"}`}>
-                <img
-                    src={logoUrl}
-                    alt="IA Academy"
-                    className="max-h-full w-auto object-contain"
-                />
+            <div className={`relative flex items-center justify-center shrink-0 ${className || "h-8 w-auto min-w-[120px]"}`}>
+                {logos.dark && (
+                    <img
+                        src={logos.dark}
+                        alt="IA Academy"
+                        className={`max-h-full w-auto object-contain ${logos.light ? "hidden dark:block" : ""}`}
+                    />
+                )}
+                {logos.light && (
+                    <img
+                        src={logos.light}
+                        alt="IA Academy"
+                        className={`max-h-full w-auto object-contain ${logos.dark ? "block dark:hidden" : ""}`}
+                    />
+                )}
             </div>
         )
     }

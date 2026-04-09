@@ -5,6 +5,7 @@ import { GallerySort } from "@/components/gallery/gallery-sort"
 import { Navbar } from "@/components/layout/navbar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { SiteLogo } from "@/components/ui/site-logo"
 import { Badge } from "@/components/ui/badge"
 
 export const dynamic = "force-dynamic"
@@ -68,7 +69,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Navbar logoArea={<SiteLogo />} />
       <main className="flex-1 w-full px-4 md:px-10 py-10">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -139,4 +140,3 @@ export default async function Home({ searchParams }: HomeProps) {
     </div>
   )
 }
-
