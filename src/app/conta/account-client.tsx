@@ -133,7 +133,7 @@ export function AccountClient({ user, subscription, likedImages, savedImages }: 
         <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mx-auto py-10 px-4 md:px-8">
             {/* Sidebar Nav */}
             <nav className="md:w-52 shrink-0 md:max-w-none max-w-full">
-                <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-3 md:pb-0 scrollbar-none snap-x snap-mandatory">
+                <div className="flex flex-col gap-2">
                     {tabs.map(tab => {
                         const Icon = tab.icon
                         return (
