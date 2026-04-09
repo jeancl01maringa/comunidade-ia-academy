@@ -68,6 +68,7 @@ export async function createManualUser(formData: FormData) {
         const phone = formData.get("phone") as string
         const access = formData.get("access") as string
         const duration = formData.get("duration") as string // "7days", "1month", "1year"
+        const passwordInput = formData.get("password") as string || "academy@123"
 
         if (!email || !name) {
             return { error: "Nome e e-mail são obrigatórios." }
@@ -87,7 +88,7 @@ export async function createManualUser(formData: FormData) {
             else if (duration === "1year") expiresAt.setFullYear(expiresAt.getFullYear() + 1)
         }
 
-        const hashedPassword = await bcrypt.hash("12345678", 10)
+        const hashedPassword = await bcrypt.hash(passwordInput, 10)
 
         // Find or create a default plan for the subscription
         let plan = await prisma.plan.findFirst({ where: { isActive: true } })

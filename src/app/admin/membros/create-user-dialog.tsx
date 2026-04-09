@@ -43,7 +43,6 @@ export function CreateUserDialog() {
             toast.error(result.error)
         } else {
             toast.success("Usuário criado com sucesso!", {
-                description: "A senha padrão temporary é: 12345678",
                 icon: <CheckCircle2 className="h-5 w-5 text-green-500" />
             })
             setOpen(false)
@@ -62,7 +61,7 @@ export function CreateUserDialog() {
                 <DialogHeader>
                     <DialogTitle className="text-xl">Novo Usuário</DialogTitle>
                     <DialogDescription>
-                        Crie um usuário manualmente na plataforma. Eles receberão a senha padrão <strong>12345678</strong> inicial.
+                        Crie um usuário manualmente na plataforma. Configure seus acessos e senha.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -98,6 +97,16 @@ export function CreateUserDialog() {
                                 name="phone"
                                 placeholder="(11) 99999-9999"
                                 className="bg-muted/40 border-border/50"
+                            />
+                        </div>
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="password">Senha de Acesso</Label>
+                            <Input
+                                id="password"
+                                name="password"
+                                defaultValue="academy@123"
+                                className="bg-muted/40 border-border/50 font-mono"
                             />
                         </div>
 
