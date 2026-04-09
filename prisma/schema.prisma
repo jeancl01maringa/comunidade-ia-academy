@@ -107,6 +107,8 @@ model Image {
   title       String?  // SEO Title
   url         String
   prompt      String   @db.Text
+  instructions String? @db.Text  // New: Instructions for usage
+  supportImages String[]         // New: Composition/Reference image URLs
   visible     Boolean  @default(true)
   status      String   @default("APPROVED") // APPROVED, PENDING, REJECTED
   

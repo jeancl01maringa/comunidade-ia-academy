@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache"
 const uploadSchema = z.object({
     title: z.string().optional(),
     prompt: z.string().min(3, "Prompt é obrigatório"),
+    instructions: z.string().optional(),
     categoryId: z.string().min(1, "Categoria é obrigatória"),
     aiModelId: z.string().optional(),
 })
@@ -18,11 +19,19 @@ export async function uploadImage(prevState: any, formData: FormData) {
     try {
         const titleStr = formData.get("title")?.toString().trim() || undefined
         const promptStr = formData.get("prompt")?.toString().trim() || ""
+        const instructionsStr = formData.get("instructions")?.toString().trim() || undefined
         const categoryIdStr = formData.get("categoryId")?.toString().trim() || ""
         const aiModelIdStr = formData.get("aiModelId")?.toString().trim() || undefined
 
         const imageFile = formData.get("image") as File | null
         const optimizedImage = formData.get("optimizedImage")?.toString() || ""
+
+        // Parse support images (We expect them as optimizedSupport_0, optimizedSupport_1, etc.)
+        const supportImagesData: string[] = []
+        for (let i = 0; i < 4; i++) {
+            const supportImg = formData.get(`optimizedSupport_${i}`)?.toString()
+            if (supportImg) supportImagesData.push(supportImg)
+        }
 
         if (!optimizedImage && (!imageFile || imageFile.size === 0)) {
             return { success: false, message: "Imagem é obrigatória" }
@@ -31,6 +40,7 @@ export async function uploadImage(prevState: any, formData: FormData) {
         const validation = uploadSchema.safeParse({
             title: titleStr,
             prompt: promptStr,
+            instructions: instructionsStr,
             categoryId: categoryIdStr,
             aiModelId: aiModelIdStr === "none" ? undefined : aiModelIdStr, // Ignore "none"
         })
@@ -74,6 +84,23 @@ export async function uploadImage(prevState: any, formData: FormData) {
         const { data: { publicUrl } } = supabaseAdmin.storage.from("images").getPublicUrl(fileName)
         finalUrl = publicUrl
 
+        // Upload Support Images identically
+        const supportImageUrls: string[] = []
+        for (const supportB64 of supportImagesData) {
+            const supName = `${Date.now()}-sup-${Math.random().toString(36).substring(7)}.webp`
+            const supBuffer = Buffer.from(supportB64.split(",")[1], "base64")
+
+            const { error: supError } = await supabaseAdmin.storage.from("images").upload(supName, supBuffer, {
+                contentType: "image/webp",
+                upsert: true
+            })
+
+            if (!supError) {
+                const { data: { publicUrl: supUrl } } = supabaseAdmin.storage.from("images").getPublicUrl(supName)
+                supportImageUrls.push(supUrl)
+            }
+        }
+
         const session = await getServerSession(authOptions)
         let userId = session?.user?.id || null
 
@@ -92,6 +119,8 @@ export async function uploadImage(prevState: any, formData: FormData) {
             data: {
                 title: titleStr,
                 prompt: promptStr,
+                instructions: instructionsStr || null,
+                supportImages: supportImageUrls,
                 categoryId: categoryIdStr,
                 aiModelId: finalAiModelId,
                 userId,

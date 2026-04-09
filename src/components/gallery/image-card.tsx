@@ -18,9 +18,11 @@ import {
 import { Badge } from "@/components/ui/badge"
 
 // Define a type that matches the serialized image
-type SerializedImage = Omit<ImageType, "createdAt" | "updatedAt"> & {
+type SerializedImage = Omit<ImageType, "createdAt" | "updatedAt" | "supportImages"> & {
     createdAt: string | Date
     updatedAt: string | Date
+    supportImages?: string[]
+    instructions?: string | null
     category?: Category | null
     aiModel?: AIModel | null
     user?: Pick<User, "id" | "name" | "image"> | null
@@ -38,6 +40,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
     const [copied, setCopied] = useState(false)
     const [expanded, setExpanded] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
+    const [activeImageIndex, setActiveImageIndex] = useState(-1) // -1 is main image, 0-3 are support images
 
     const {
         likes,
@@ -83,9 +86,18 @@ export function ImageCard({ image }: { image: SerializedImage }) {
             router.push("/planos")
             return
         }
+
+        let targetUrl = image.url
+        let targetName = `image-${image.id}.png`
+
+        if (activeImageIndex !== -1 && image.supportImages && image.supportImages[activeImageIndex]) {
+            targetUrl = image.supportImages[activeImageIndex]
+            targetName = `image-${image.id}-support-${activeImageIndex}.png`
+        }
+
         const link = document.createElement("a")
-        link.href = image.url
-        link.download = `image-${image.id}.png`
+        link.href = targetUrl
+        link.download = targetName
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -133,13 +145,45 @@ export function ImageCard({ image }: { image: SerializedImage }) {
 
             <DialogContent className="sm:max-w-none md:w-[960px] w-[calc(100%-2rem)] max-w-full h-fit max-h-[90vh] md:max-h-[650px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
                 <div className="flex flex-col md:flex-row h-auto min-h-0 overflow-y-auto md:overflow-hidden">
-                    {/* Left side: Image */}
-                    <div className="w-full md:w-[48%] bg-muted/20 flex items-center justify-center relative min-h-[150px] md:min-h-0 border-b md:border-b-0 md:border-r border-border p-6 md:p-5">
-                        <img
-                            src={image.url}
-                            alt={image.title || image.prompt}
-                            className="w-full h-auto object-contain max-h-[25vh] md:max-h-[610px] rounded-xl md:rounded-2xl shadow-2xl"
-                        />
+                    {/* Left side: Image and Thumbnails */}
+                    <div className="w-full md:w-[48%] bg-muted/20 flex flex-col relative h-full min-h-[150px] md:min-h-0 border-b md:border-b-0 md:border-r border-border p-4 md:p-5">
+
+                        {/* Main Viewer Area */}
+                        <div className="flex-1 flex items-center justify-center w-full mb-4">
+                            <img
+                                src={activeImageIndex === -1 ? image.url : (image.supportImages?.[activeImageIndex] || image.url)}
+                                alt={image.title || image.prompt}
+                                className="w-full h-auto object-contain max-h-[35vh] md:max-h-[550px] rounded-xl md:rounded-2xl shadow-2xl transition-all duration-300"
+                            />
+                        </div>
+
+                        {/* Composition Thumbnails Strip */}
+                        {image.supportImages && image.supportImages.length > 0 && (
+                            <div className="flex items-center justify-center gap-2 md:gap-3 w-full self-end h-16 md:h-20 shrink-0">
+                                <button
+                                    onClick={() => setActiveImageIndex(-1)}
+                                    className={cn(
+                                        "h-full aspect-square rounded-lg border-2 overflow-hidden transition-all duration-200",
+                                        activeImageIndex === -1 ? "border-blue-500 shadow-lg shadow-blue-500/20 scale-105 z-10" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
+                                    )}
+                                >
+                                    <img src={image.url} className="w-full h-full object-cover" />
+                                </button>
+
+                                {image.supportImages.map((supUrl, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setActiveImageIndex(idx)}
+                                        className={cn(
+                                            "h-full aspect-square rounded-lg border-2 overflow-hidden transition-all duration-200",
+                                            activeImageIndex === idx ? "border-blue-500 shadow-lg shadow-blue-500/20 scale-105 z-10" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
+                                        )}
+                                    >
+                                        <img src={supUrl} className="w-full h-full object-cover" />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* Right side: Information */}
@@ -248,8 +292,19 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                         {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
                                         {copied ? "Prompt Copiado!" : "Copiar Prompt"}
                                     </Button>
+
                                 </div>
                             </div>
+
+                            {/* Instructions Block */}
+                            {image.instructions && (
+                                <div className="space-y-2 md:space-y-3 pt-2">
+                                    <p className="text-[10px] font-medium uppercase text-muted-foreground tracking-widest">Instruções</p>
+                                    <div className="text-sm text-foreground/90 leading-relaxed font-light bg-blue-500/5 p-4 rounded-xl border border-blue-500/20">
+                                        <p className="break-words text-xs md:text-sm text-blue-500/90 whitespace-pre-wrap">{image.instructions}</p>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Autor Row */}
                             {image.user && (
