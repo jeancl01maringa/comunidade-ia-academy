@@ -77,9 +77,9 @@ export function Navbar({ logoArea }: { logoArea?: React.ReactNode }) {
                 <div className="flex items-center gap-3 shrink-0">
                     {session ? (
                         <>
-                            {session.user.role === "ADMIN" && (
+                            {session.user.role !== "USER" && (
                                 <Button variant="ghost" asChild className="text-muted-foreground hover:text-foreground hover:bg-muted/40 hidden md:flex font-medium">
-                                    <Link href="/admin">Admin</Link>
+                                    <Link href="/admin">{session.user.role === "ADMIN" ? "Admin" : "Estúdio"}</Link>
                                 </Button>
                             )}
 
@@ -106,11 +106,11 @@ export function Navbar({ logoArea }: { logoArea?: React.ReactNode }) {
                                         </div>
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator className="bg-border/50" />
-                                    {session.user.role === "ADMIN" && (
+                                    {session.user.role !== "USER" && (
                                         <DropdownMenuItem asChild className="focus:bg-accent focus:text-accent-foreground cursor-pointer">
                                             <Link href="/admin" className="w-full flex items-center">
                                                 <Settings className="mr-2 h-4 w-4" />
-                                                Painel Admin
+                                                Painel {session.user.role === "ADMIN" ? "Admin" : "Estúdio"}
                                             </Link>
                                         </DropdownMenuItem>
                                     )}

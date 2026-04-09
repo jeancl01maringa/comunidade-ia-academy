@@ -172,9 +172,15 @@ export async function updateManualUser(formData: FormData) {
 
         if (access === "PREMIUM") {
             const currentUser = await prisma.user.findUnique({ where: { id } })
-            expiresAt = currentUser?.expiresAt ? new Date(currentUser.expiresAt) : new Date()
 
-            if (duration === "1day") expiresAt.setDate(new Date().getDate() + 1)
+            // If the user had no previous expiration, DO NOT expire instantly. We give a default 30 days if 'none' is chosen.
+            const baseDate = currentUser?.expiresAt ? new Date(currentUser.expiresAt) : new Date()
+            expiresAt = baseDate
+
+            if (duration === "none" && !currentUser?.expiresAt) {
+                // Changing from FREE to PREMIUM but forgot to choose a duration, give 30 days by default.
+                expiresAt.setMonth(new Date().getMonth() + 1)
+            } else if (duration === "1day") expiresAt.setDate(new Date().getDate() + 1)
             else if (duration === "7days") expiresAt.setDate(new Date().getDate() + 7)
             else if (duration === "1month") expiresAt.setMonth(new Date().getMonth() + 1)
             else if (duration === "1year") expiresAt.setFullYear(new Date().getFullYear() + 1)

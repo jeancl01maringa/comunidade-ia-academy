@@ -48,11 +48,27 @@ export function AppSidebar({ logoArea }: { logoArea?: React.ReactNode }) {
         { icon: Search, label: "Pesquisar", href: "/search" },
     ]
 
-    const adminItems = [
-        { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-        { icon: Folder, label: "Modelos", href: "/admin/models" },
-        { icon: Users, label: "Assinantes", href: "/admin/subscribers" },
-    ]
+    const role = session?.user?.role || "USER"
+    const hasElevatedRole = role !== "USER"
+
+    let adminItems: { icon: any; label: string; href: string }[] = []
+
+    if (role === "ADMIN") {
+        adminItems = [
+            { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+            { icon: Folder, label: "Modelos", href: "/admin/models" },
+            { icon: Users, label: "Assinantes", href: "/admin/subscribers" },
+        ]
+    } else if (role === "DESIGNER_ADMIN") {
+        adminItems = [
+            { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+            { icon: Folder, label: "Conteúdos", href: "/admin/upload" },
+        ]
+    } else if (role === "DESIGNER") {
+        adminItems = [
+            { icon: LayoutDashboard, label: "Postar Artes", href: "/admin/upload" },
+        ]
+    }
 
     const WHATSAPP_URL = "https://wa.me/5544999419907?text=Ol%C3%A1%2C+preciso+de+ajuda+com+a+comunidade+IA+Academy+Pro."
 
@@ -120,12 +136,12 @@ export function AppSidebar({ logoArea }: { logoArea?: React.ReactNode }) {
                 })}
 
                 {/* Admin Section */}
-                {session?.user?.role === "ADMIN" && (
+                {hasElevatedRole && (
                     <>
                         <div className={cn("mt-4 mb-2 flex items-center px-3", !isExpanded && "justify-center")}>
                             {isExpanded ? (
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 transition-all">
-                                    Admin
+                                    {role === "ADMIN" ? "Admin" : "Estúdio"}
                                 </span>
                             ) : (
                                 <Crown className="h-3 w-3 text-muted-foreground/40" />

@@ -54,11 +54,16 @@ export function ImageCard({ image }: { image: SerializedImage }) {
         setIsMounted(true)
     }, [])
 
-    const isPremium = session?.user?.role === "ADMIN" || (
+    const userRole = session?.user?.role || "USER"
+    const hasElevatedRole = userRole !== "USER"
+
+    // Explicit Subscription valid check (for normal "USER" base accounts)
+    const isPremiumSubscriber = userRole === "USER" &&
         session?.user?.status === "ACTIVE" &&
         session?.user?.expiresAt &&
         new Date(session.user.expiresAt) > new Date()
-    )
+
+    const isPremium = hasElevatedRole || isPremiumSubscriber
 
     const isLocked = !isPremium
 
