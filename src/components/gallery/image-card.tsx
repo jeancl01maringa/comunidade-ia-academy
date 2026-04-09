@@ -126,14 +126,14 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                 </DialogTrigger>
             </div>
 
-            <DialogContent className="sm:max-w-none md:w-[960px] w-full max-w-[calc(100%-1rem)] h-fit max-h-[95vh] md:max-h-[650px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
+            <DialogContent className="sm:max-w-none md:w-[960px] w-[calc(100%-2rem)] max-w-full h-fit max-h-[90vh] md:max-h-[650px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border shadow-2xl ring-1 ring-border transition-all">
                 <div className="flex flex-col md:flex-row h-auto min-h-0 overflow-y-auto md:overflow-hidden">
                     {/* Left side: Image */}
-                    <div className="w-full md:w-[48%] bg-muted/20 flex items-center justify-center relative min-h-[200px] md:min-h-0 border-b md:border-b-0 md:border-r border-border p-4 md:p-5">
+                    <div className="w-full md:w-[48%] bg-muted/20 flex items-center justify-center relative min-h-[150px] md:min-h-0 border-b md:border-b-0 md:border-r border-border p-6 md:p-5">
                         <img
                             src={image.url}
                             alt={image.title || image.prompt}
-                            className="w-full h-auto object-contain max-h-[40vh] md:max-h-[610px] rounded-xl md:rounded-2xl shadow-2xl"
+                            className="w-full h-auto object-contain max-h-[25vh] md:max-h-[610px] rounded-xl md:rounded-2xl shadow-2xl"
                         />
                     </div>
 
@@ -208,17 +208,17 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                     <div className="text-sm text-foreground/90 leading-relaxed font-light bg-muted/20 p-3 md:p-4 rounded-xl border border-border">
                                         {isLongPrompt && !expanded ? (
                                             <div>
-                                                <p className="break-words">{image.prompt.slice(0, 150)}...</p>
+                                                <p className="break-words text-xs md:text-sm">{image.prompt.slice(0, 100)}...</p>
                                                 <button
                                                     onClick={() => setExpanded(true)}
-                                                    className="text-blue-500 hover:text-blue-400 text-sm font-medium mt-2 focus:outline-none flex items-center gap-1"
+                                                    className="text-blue-500 hover:text-blue-400 text-[10px] md:text-sm font-medium mt-2 focus:outline-none flex items-center gap-1"
                                                 >
                                                     Veja mais <Maximize2 className="h-3 w-3" />
                                                 </button>
                                             </div>
                                         ) : (
-                                            <div className="space-y-3">
-                                                <p className={`break-words ${isLongPrompt ? "max-h-[150px] md:max-h-[150px] overflow-y-auto pr-2 scrollbar-dark" : ""}`}>
+                                            <div className="space-y-2 md:space-y-3">
+                                                <p className={`break-words text-xs md:text-sm ${isLongPrompt ? "max-h-[100px] md:max-h-[150px] overflow-y-auto pr-2 scrollbar-dark" : ""}`}>
                                                     {image.prompt}
                                                 </p>
                                                 {isLongPrompt && (

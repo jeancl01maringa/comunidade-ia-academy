@@ -70,8 +70,8 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar logoArea={<SiteLogo />} />
-      <main className="flex-1 w-full px-4 md:px-10 py-10">
-        <div className="flex flex-col gap-8">
+      <main className="flex-1 w-full px-2 sm:px-4 md:px-10 py-6 md:py-10">
+        <div className="flex flex-col gap-6 md:gap-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-3">
@@ -92,9 +92,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
           <CategoryFilter categories={categories} />
 
-          <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
+          <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4">
             {images.map((image) => (
-              <div key={image.id} className="mb-4 break-inside-avoid">
+              <div key={image.id} className="mb-2 md:mb-4 break-inside-avoid">
                 <ImageCard
                   image={{
                     ...image,

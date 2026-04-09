@@ -30,14 +30,14 @@ export async function SiteLogo({ className, textClassName }: { className?: strin
                     <img
                         src={logos.dark}
                         alt="IA Academy"
-                        className={`max-h-full w-auto object-contain ${logos.light ? "hidden dark:block" : ""}`}
+                        className="h-auto w-auto max-w-[120px] object-contain hidden dark:block"
                     />
                 )}
                 {logos.light && (
                     <img
                         src={logos.light}
                         alt="IA Academy"
-                        className={`max-h-full w-auto object-contain ${logos.dark ? "block dark:hidden" : ""}`}
+                        className="h-auto w-auto max-w-[120px] object-contain block dark:hidden"
                     />
                 )}
             </div>

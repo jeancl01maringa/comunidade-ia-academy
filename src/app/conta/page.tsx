@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { redirect } from "next/navigation"
 import { Navbar } from "@/components/layout/navbar"
+import { SiteLogo } from "@/components/ui/site-logo"
 import { AccountClient } from "./account-client"
 
 export const dynamic = "force-dynamic"
@@ -56,8 +57,8 @@ export default async function ContaPage() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="flex-1 w-full">
+            <Navbar logoArea={<SiteLogo />} />
+            <main className="flex-1 w-full overflow-hidden">
                 <AccountClient
                     user={user}
                     likedImages={likedImages.map(l => l.image)}

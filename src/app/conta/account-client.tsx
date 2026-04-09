@@ -132,8 +132,8 @@ export function AccountClient({ user, subscription, likedImages, savedImages }: 
     return (
         <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mx-auto py-10 px-4 md:px-8">
             {/* Sidebar Nav */}
-            <nav className="md:w-52 shrink-0">
-                <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible">
+            <nav className="md:w-52 shrink-0 md:max-w-none max-w-full">
+                <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-3 md:pb-0 scrollbar-none snap-x snap-mandatory">
                     {tabs.map(tab => {
                         const Icon = tab.icon
                         return (

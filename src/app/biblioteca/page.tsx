@@ -56,8 +56,8 @@ export default async function Biblioteca({ searchParams }: BibliotecaProps) {
         <div className="min-h-screen flex flex-col bg-background">
             <Navbar />
 
-            <main className="flex-1 w-full pr-10 pl-0 py-10">
-                <div className="flex flex-col gap-8">
+            <main className="flex-1 w-full px-2 sm:px-4 md:px-10 py-6 md:py-10">
+                <div className="flex flex-col gap-6 md:gap-8">
                     {/* Header */}
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-3">
@@ -76,9 +76,9 @@ export default async function Biblioteca({ searchParams }: BibliotecaProps) {
 
                     {/* Grid */}
                     {images.length > 0 ? (
-                        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
+                        <div className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-2 md:gap-4">
                             {images.map((image) => (
-                                <div key={image.id} className="mb-4 break-inside-avoid">
+                                <div key={image.id} className="mb-2 md:mb-4 break-inside-avoid">
                                     <ImageCard
                                         image={{
                                             ...image,

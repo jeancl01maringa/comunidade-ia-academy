@@ -36,7 +36,7 @@ export function Navbar({ logoArea }: { logoArea?: React.ReactNode }) {
 
     return (
         <header className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-border/10">
-            <div className="w-full h-20 flex items-center justify-between gap-6 pr-10 pl-0">
+            <div className="w-full h-20 flex items-center justify-between gap-2 md:gap-6 pr-4 md:pr-10 pl-0">
                 <div className={cn("flex items-center gap-2 shrink-0 transition-all duration-300", isExpanded ? "opacity-0 pointer-events-none w-0 overflow-hidden" : "opacity-100")}>
                     <Link href="/" className="flex items-center gap-2">
                         {logoArea || (
@@ -85,7 +85,7 @@ export function Navbar({ logoArea }: { logoArea?: React.ReactNode }) {
 
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="relative h-10 gap-2 px-3 hover:bg-muted/40 text-muted-foreground hover:text-foreground border border-border rounded-xl">
+                                    <Button variant="ghost" className="relative h-10 gap-2 px-2 md:px-3 hover:bg-muted/40 text-muted-foreground hover:text-foreground border border-border rounded-xl">
                                         <div className="h-7 w-7 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 p-[1px]">
                                             <div className="h-full w-full rounded-full bg-background flex items-center justify-center overflow-hidden">
                                                 {session.user.image ? (

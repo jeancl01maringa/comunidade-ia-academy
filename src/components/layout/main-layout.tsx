@@ -21,8 +21,8 @@ export function MainLayout({ children, logoArea }: { children: React.ReactNode, 
             <AppSidebar logoArea={logoArea} />
             <div
                 className={cn(
-                    "flex-1 transition-all duration-300",
-                    isExpanded ? "pl-[296px]" : "pl-[104px]"
+                    "flex-1 transition-all duration-300 w-full min-w-0 overflow-x-hidden",
+                    isExpanded ? "md:pl-[296px] pl-[72px]" : "md:pl-[104px] pl-[72px]"
                 )}
             >
                 <SessionProvider>{children}</SessionProvider>
