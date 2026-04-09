@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { Navbar } from "@/components/layout/navbar"
+import { SiteLogo } from "@/components/ui/site-logo"
 import { Search, ExternalLink, Sparkles } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
@@ -38,8 +39,8 @@ export default async function DesignPage({ searchParams }: DesignPageProps) {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="flex-1 w-full pr-10 pl-0 py-10">
+            <Navbar logoArea={<SiteLogo />} />
+            <main className="flex-1 w-full px-4 md:px-8 py-10 max-w-6xl mx-auto space-y-12">
                 <div className="flex flex-col gap-8">
                     {/* Header */}
                     <div className="flex flex-col gap-1">
@@ -159,8 +160,8 @@ export default async function DesignPage({ searchParams }: DesignPageProps) {
                                         key={cat.id}
                                         href={`/design?category=${cat.id}`}
                                         className={`px-4 py-2 rounded-xl border text-sm transition-all hover:border-blue-500/50 hover:text-foreground ${categoryId === cat.id
-                                                ? "bg-blue-600/20 border-blue-500/50 text-blue-400"
-                                                : "border-border bg-card/40 text-muted-foreground"
+                                            ? "bg-blue-600/20 border-blue-500/50 text-blue-400"
+                                            : "border-border bg-card/40 text-muted-foreground"
                                             }`}
                                     >
                                         {cat.name}

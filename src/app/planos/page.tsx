@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/layout/navbar"
+import { SiteLogo } from "@/components/ui/site-logo"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
@@ -72,10 +73,10 @@ const tiers = [
 
 export default function PlanosPage() {
     return (
-        <div className="min-h-screen bg-background">
-            <Navbar />
+        <div className="min-h-screen flex flex-col bg-background selection:bg-blue-500/20">
+            <Navbar logoArea={<SiteLogo />} />
 
-            <main className="container mx-auto px-6 pb-24">
+            <main className="flex-1 flex flex-col items-center justify-center p-4 py-20 relative overflow-hidden">
                 {/* Hero Section */}
                 <section className="pt-32 pb-16 flex flex-col items-center text-center">
                     <Badge variant="secondary" className="mb-6 py-1 px-4 bg-muted/40 text-muted-foreground border-none font-normal text-[10px] uppercase tracking-widest rounded-full">

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { Navbar } from "@/components/layout/navbar"
+import { SiteLogo } from "@/components/ui/site-logo"
 import Link from "next/link"
 import { Folder, ImageIcon } from "lucide-react"
 
@@ -21,8 +22,8 @@ export default async function CollectionsPage() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="flex-1 w-full pr-10 pl-0 py-10">
+            <Navbar logoArea={<SiteLogo />} />
+            <main className="flex-1 w-full px-4 md:px-10 py-10">
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h1 className="text-lg font-medium tracking-tight text-foreground/90">
