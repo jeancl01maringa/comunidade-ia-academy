@@ -90,6 +90,12 @@ export async function createManualUser(formData: FormData) {
 
         const hashedPassword = await bcrypt.hash(passwordInput, 10)
 
+        // Parse Database Role
+        let dbRole = "USER"
+        if (access === "ADMIN") dbRole = "ADMIN"
+        if (access === "DESIGNER_ADMIN") dbRole = "DESIGNER_ADMIN"
+        if (access === "DESIGNER") dbRole = "DESIGNER"
+
         // Find or create a default plan for the subscription
         let plan = await prisma.plan.findFirst({ where: { isActive: true } })
         if (!plan && access === "PREMIUM") {
@@ -112,7 +118,7 @@ export async function createManualUser(formData: FormData) {
                 phone: phone || null,
                 password: hashedPassword,
                 origin: "MANUAL",
-                role: "USER",
+                role: dbRole,
                 status: "ACTIVE",
                 expiresAt,
             }

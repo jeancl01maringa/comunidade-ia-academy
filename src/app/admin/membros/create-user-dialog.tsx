@@ -111,14 +111,17 @@ export function CreateUserDialog() {
                         </div>
 
                         <div className="grid gap-2">
-                            <Label>Nível de Acesso</Label>
+                            <Label>Nível de Acesso (Cargo)</Label>
                             <Select value={accessLevel} onValueChange={setAccessLevel}>
                                 <SelectTrigger className="bg-muted/40 border-border/50">
                                     <SelectValue placeholder="Selecione o acesso" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="FREE">Usuário Grátis (Membro)</SelectItem>
-                                    <SelectItem value="PREMIUM">Assinante Premium</SelectItem>
+                                    <SelectItem value="FREE">Usuário Grátis (Bloqueado no Mural)</SelectItem>
+                                    <SelectItem value="PREMIUM">Assinante Premium (Painel Comum)</SelectItem>
+                                    <SelectItem value="DESIGNER">Designer (Acesso só Uploads)</SelectItem>
+                                    <SelectItem value="DESIGNER_ADMIN">Designer Admin (Chefe Envios)</SelectItem>
+                                    <SelectItem value="ADMIN">Administrador (Deus)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
