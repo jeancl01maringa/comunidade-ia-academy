@@ -61,6 +61,13 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
         return <Badge variant="outline" className={`${style} px-2 rounded-lg uppercase text-[10px] font-bold`}>{origin || "N/A"}</Badge>
     }
 
+    const getRoleBadge = (role: string) => {
+        if (role === "ADMIN") return <Badge className="bg-purple-500/10 text-purple-500 border-none px-2 rounded-lg font-medium text-[10px] uppercase">👑 Admin</Badge>
+        if (role === "DESIGNER_ADMIN") return <Badge className="bg-blue-500/10 text-blue-500 border-none px-2 rounded-lg font-medium text-[10px] uppercase">Chefe Des.</Badge>
+        if (role === "DESIGNER") return <Badge className="bg-indigo-500/10 text-indigo-500 border-none px-2 rounded-lg font-medium text-[10px] uppercase">Designer</Badge>
+        return <span className="text-muted-foreground text-xs">Usuário</span>
+    }
+
     return (
         <div className="flex flex-col h-full">
             <div className="p-4 border-b border-border/50 flex items-center justify-between bg-muted/5">
@@ -79,6 +86,7 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
                 <TableHeader>
                     <TableRow className="border-border/50 hover:bg-transparent">
                         <TableHead className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground w-[300px]">Membro</TableHead>
+                        <TableHead className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">Cargo</TableHead>
                         <TableHead className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">Origem</TableHead>
                         <TableHead className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">Status</TableHead>
                         <TableHead className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">Membro desde</TableHead>
@@ -101,6 +109,7 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
                                         </div>
                                     </div>
                                 </TableCell>
+                                <TableCell>{getRoleBadge(member.role)}</TableCell>
                                 <TableCell>{getOriginBadge(member.origin)}</TableCell>
                                 <TableCell>{getStatusBadge(member.status, member.expiresAt)}</TableCell>
                                 <TableCell className="text-xs text-muted-foreground">
@@ -133,7 +142,7 @@ export function MembersTable({ members, total, currentPage }: MembersTableProps)
                         ))
                     ) : (
                         <TableRow>
-                            <TableCell colSpan={6} className="h-32 text-center text-muted-foreground italic text-sm">
+                            <TableCell colSpan={7} className="h-32 text-center text-muted-foreground italic text-sm">
                                 Nenhum membro encontrado.
                             </TableCell>
                         </TableRow>

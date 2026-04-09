@@ -6,7 +6,6 @@ import bcrypt from "bcryptjs"
 
 export async function getMembers(page = 1, pageSize = 20, query = "") {
     const where = {
-        role: "USER",
         ...(query && {
             OR: [
                 { name: { contains: query, mode: "insensitive" } },
