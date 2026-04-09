@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/providers/sidebar-context"
 import { SearchDialog } from "@/components/gallery/search-dialog"
+import { SiteLogo } from "@/components/ui/site-logo"
 
 export function AppSidebar() {
     const pathname = usePathname()
@@ -74,12 +75,9 @@ export function AppSidebar() {
             )}>
                 {isExpanded && (
                     <Link href="/" className="flex items-center gap-2 overflow-hidden animate-in fade-in slide-in-from-left-4 duration-300">
-                        <div className="h-8 w-8 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shrink-0">
-                            <span className="text-white font-medium text-lg italic">IA</span>
-                        </div>
-                        <span className="font-medium text-foreground tracking-tighter text-lg whitespace-nowrap">
-                            IAACADEMY
-                        </span>
+                        <React.Suspense fallback={<div className="h-8 w-24 animate-pulse bg-muted rounded"></div>}>
+                            <SiteLogo />
+                        </React.Suspense>
                     </Link>
                 )}
                 <Button
