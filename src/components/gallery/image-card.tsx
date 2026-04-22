@@ -81,26 +81,39 @@ export function ImageCard({ image }: { image: SerializedImage }) {
         setTimeout(() => setCopied(false), 2000)
     }
 
-    const handleDownload = () => {
+    const handleDownload = async () => {
         if (isLocked) {
             router.push("/planos")
             return
         }
 
         let targetUrl = image.url
-        let targetName = `image-${image.id}.png`
+        let targetName = `image-${image.id}.webp`
 
         if (activeImageIndex !== -1 && image.supportImages && image.supportImages[activeImageIndex]) {
             targetUrl = image.supportImages[activeImageIndex]
-            targetName = `image-${image.id}-support-${activeImageIndex}.png`
+            targetName = `image-${image.id}-support-${activeImageIndex}.webp`
         }
 
-        const link = document.createElement("a")
-        link.href = targetUrl
-        link.download = targetName
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+        try {
+            // Fetch as blob to force download on cross-origin Supabase URLs
+            const response = await fetch(targetUrl)
+            const blob = await response.blob()
+            const blobUrl = URL.createObjectURL(blob)
+
+            const link = document.createElement("a")
+            link.href = blobUrl
+            link.download = targetName
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+
+            // Clean up the blob URL
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 10000)
+        } catch {
+            // Fallback: open in new tab if fetch fails
+            window.open(targetUrl, "_blank")
+        }
     }
 
     const handleOpenChange = (open: boolean) => {
