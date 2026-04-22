@@ -40,7 +40,7 @@ export function ImageCard({ image }: { image: SerializedImage }) {
     const [copied, setCopied] = useState(false)
     const [expanded, setExpanded] = useState(false)
     const [isMounted, setIsMounted] = useState(false)
-    const [activeImageIndex, setActiveImageIndex] = useState(-1) // -1 is main image, 0-3 are support images
+    const [activeImageIndex, setActiveImageIndex] = useState(-1) // -1 is main image, 0+ are support images
 
     const {
         likes,
@@ -172,12 +172,16 @@ export function ImageCard({ image }: { image: SerializedImage }) {
 
                         {/* Composition Thumbnails Strip */}
                         {image.supportImages && image.supportImages.length > 0 && (
-                            <div className="grid grid-cols-5 gap-2 w-full shrink-0 mt-2">
+                            <div className={cn(
+                                "grid gap-2 w-full shrink-0 mt-2",
+                                image.supportImages.length > 4 ? "grid-cols-5 sm:grid-cols-6 md:grid-cols-9" : "grid-cols-5"
+                            )}>
                                 {/* Main image thumb — always first */}
                                 <button
                                     onClick={() => setActiveImageIndex(-1)}
                                     className={cn(
-                                        "h-14 md:h-16 w-full aspect-square rounded-md border-2 overflow-hidden transition-all duration-200",
+                                        "w-full aspect-square rounded-md border-2 overflow-hidden transition-all duration-200",
+                                        image.supportImages && image.supportImages.length > 4 ? "h-10 md:h-12" : "h-14 md:h-16",
                                         activeImageIndex === -1 ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                     )}
                                 >
@@ -189,7 +193,8 @@ export function ImageCard({ image }: { image: SerializedImage }) {
                                         key={idx}
                                         onClick={() => setActiveImageIndex(idx)}
                                         className={cn(
-                                            "h-14 md:h-16 w-full aspect-square rounded-md border-2 overflow-hidden transition-all duration-200",
+                                            "w-full aspect-square rounded-md border-2 overflow-hidden transition-all duration-200",
+                                            image.supportImages && image.supportImages.length > 4 ? "h-10 md:h-12" : "h-14 md:h-16",
                                             activeImageIndex === idx ? "border-blue-500 shadow-md shadow-blue-500/20" : "border-border/50 hover:border-border cursor-pointer opacity-70 hover:opacity-100"
                                         )}
                                     >

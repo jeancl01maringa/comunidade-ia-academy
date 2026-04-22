@@ -28,7 +28,7 @@ export async function uploadImage(prevState: any, formData: FormData) {
 
         // Parse support images (We expect them as optimizedSupport_0, optimizedSupport_1, etc.)
         const supportImagesData: string[] = []
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 8; i++) {
             const supportImg = formData.get(`optimizedSupport_${i}`)?.toString()
             if (supportImg) supportImagesData.push(supportImg)
         }
@@ -200,7 +200,7 @@ export async function updateImage(id: string, formData: FormData) {
 
         // Replace support images if any new ones were provided
         const newSupportData: string[] = []
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 8; i++) {
             const b64 = formData.get(`optimizedSupport_${i}`)?.toString()
             if (b64) newSupportData.push(b64)
         }

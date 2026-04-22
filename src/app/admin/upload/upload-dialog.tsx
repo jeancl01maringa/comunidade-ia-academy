@@ -79,7 +79,7 @@ export function UploadDialog({ categories, aiModels }: UploadDialogProps) {
         const files = Array.from(e.target.files || [])
         if (!files.length) return
 
-        const newFiles = [...supportImages, ...files].slice(0, 4) // Max 4
+        const newFiles = [...supportImages, ...files].slice(0, 8) // Max 8
         setSupportImages(newFiles)
 
         const newPreviews: string[] = []
@@ -255,7 +255,7 @@ export function UploadDialog({ categories, aiModels }: UploadDialogProps) {
 
                             {/* Composition Array */}
                             <div className="space-y-2">
-                                <Label className="text-base font-semibold">Imagens de Composição/Referência <span className="text-sm font-normal text-muted-foreground">(Máx 4)</span></Label>
+                                <Label className="text-base font-semibold">Imagens de Composição/Referência <span className="text-sm font-normal text-muted-foreground">(Máx 8)</span></Label>
                                 <div className="grid grid-cols-4 gap-3">
                                     {supportPreviews.map((preview, i) => (
                                         <div key={i} className="relative group rounded-lg overflow-hidden border aspect-square">
@@ -265,7 +265,7 @@ export function UploadDialog({ categories, aiModels }: UploadDialogProps) {
                                             </button>
                                         </div>
                                     ))}
-                                    {supportImages.length < 4 && (
+                                    {supportImages.length < 8 && (
                                         <div className="border-2 border-dashed rounded-lg aspect-square flex items-center justify-center hover:bg-muted/40 transition-colors relative">
                                             <Input type="file" accept="image/*" multiple className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handleSupportImageSelect} />
                                             <Plus className="h-6 w-6 text-muted-foreground" />

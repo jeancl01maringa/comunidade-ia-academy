@@ -94,7 +94,7 @@ export function EditUploadDialog({ image, categories, aiModels }: EditUploadDial
         const files = Array.from(e.target.files || [])
         if (!files.length) return
         const totalSlots = existingSupport.length + newSupportFiles.length
-        const remaining = 4 - totalSlots
+        const remaining = 8 - totalSlots
         if (remaining <= 0) return
 
         const added = files.slice(0, remaining)
@@ -261,7 +261,7 @@ export function EditUploadDialog({ image, categories, aiModels }: EditUploadDial
 
                             {/* Support Images */}
                             <div className="space-y-2">
-                                <Label className="text-base font-semibold">Imagens de Composição <span className="text-sm font-normal text-muted-foreground">(Máx 4)</span></Label>
+                                <Label className="text-base font-semibold">Imagens de Composição <span className="text-sm font-normal text-muted-foreground">(Máx 8)</span></Label>
                                 <div className="grid grid-cols-4 gap-3">
                                     {/* Existing ones */}
                                     {existingSupport.map((url, i) => (
@@ -282,7 +282,7 @@ export function EditUploadDialog({ image, categories, aiModels }: EditUploadDial
                                         </div>
                                     ))}
                                     {/* Add slot */}
-                                    {totalSupport < 4 && (
+                                    {totalSupport < 8 && (
                                         <div className="border-2 border-dashed rounded-lg aspect-square flex items-center justify-center hover:bg-muted/40 transition-colors relative">
                                             <input type="file" accept="image/*" multiple className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={handleAddSupportFiles} />
                                             <Plus className="h-6 w-6 text-muted-foreground" />
