@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useSession, signOut } from "next-auth/react"
 import { Search, User, LogOut, Settings } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import {
@@ -26,6 +26,15 @@ export function Navbar({ logoArea }: { logoArea?: React.ReactNode }) {
     const router = useRouter()
     const [searchQuery, setSearchQuery] = useState("")
     const [isSearchOpen, setIsSearchOpen] = useState(false)
+
+    // Sync search input with URL parm on load
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search)
+            const q = urlParams.get('q')
+            if (q) setSearchQuery(q)
+        }
+    }, [])
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()

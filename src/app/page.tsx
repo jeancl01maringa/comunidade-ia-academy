@@ -127,8 +127,20 @@ export default async function Home({ searchParams }: HomeProps) {
           )}
 
           {images.length === 0 && (
-            <div className="text-center py-20 text-muted-foreground bg-card/30 rounded-3xl border border-dashed border-border/50">
-              Nenhuma imagem encontrada nesta categoria.
+            <div className="text-center py-24 text-muted-foreground bg-card/20 rounded-[40px] border border-dashed border-border/50 flex flex-col items-center gap-3">
+              <p className="font-medium text-foreground/80">
+                {searchQuery
+                  ? `Nenhum resultado encontrado para "${searchQuery}"`
+                  : "Nenhuma imagem encontrada nesta categoria."}
+              </p>
+              <p className="text-xs">
+                Tente buscar por termos mais genéricos ou mudar a categoria.
+              </p>
+              {searchQuery && (
+                <Button variant="link" asChild className="text-blue-500 mt-2">
+                  <Link href="/">Limpar busca</Link>
+                </Button>
+              )}
             </div>
           )}
         </div>
