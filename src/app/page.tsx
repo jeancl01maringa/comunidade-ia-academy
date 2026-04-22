@@ -35,7 +35,10 @@ export default async function Home({ searchParams }: HomeProps) {
   }
 
   if (searchQuery) {
-    where.title = { contains: searchQuery, mode: 'insensitive' }
+    where.OR = [
+      { title: { contains: searchQuery, mode: 'insensitive' } },
+      { prompt: { contains: searchQuery, mode: 'insensitive' } },
+    ]
   }
 
   // Build Prisma orderBy clause
