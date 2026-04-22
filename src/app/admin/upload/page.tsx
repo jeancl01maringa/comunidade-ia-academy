@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { UploadDialog } from "./upload-dialog"
+import { EditUploadDialog } from "./edit-upload-dialog"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
@@ -146,9 +147,20 @@ export default async function UploadsPage({ searchParams }: PageProps) {
                                                 <Button variant="ghost" size="icon" className="h-8 w-8">
                                                     <Eye className="h-4 w-4" />
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                    <Pencil className="h-4 w-4" />
-                                                </Button>
+                                                <EditUploadDialog
+                                                    image={{
+                                                        id: image.id,
+                                                        title: image.title,
+                                                        prompt: image.prompt,
+                                                        instructions: image.instructions,
+                                                        categoryId: image.categoryId,
+                                                        aiModelId: image.aiModelId,
+                                                        url: image.url,
+                                                        supportImages: image.supportImages,
+                                                    }}
+                                                    categories={categories.map(c => ({ id: c.id, name: c.name }))}
+                                                    aiModels={aiModels.map(m => ({ id: m.id, name: m.name }))}
+                                                />
                                                 <DeleteButton id={image.id} />
                                             </div>
                                         </TableCell>
