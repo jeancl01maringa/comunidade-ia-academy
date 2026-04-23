@@ -149,6 +149,11 @@ export function EditUploadDialog({ image, categories, aiModels }: EditUploadDial
             formData.set("prompt", prompt)
             formData.set("instructions", instructions)
 
+            // Include existing support images that were not removed
+            existingSupport.forEach(url => {
+                formData.append("existingSupport", url)
+            })
+
             // Compress & attach main image only if replaced
             if (newMainFile) {
                 const { base64 } = await compressImage(newMainFile)

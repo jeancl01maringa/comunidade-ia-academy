@@ -198,14 +198,17 @@ export async function updateImage(id: string, formData: FormData) {
             }
         }
 
-        // Replace support images if any new ones were provided
+        // Support images logic: merge existing URLs + newly uploaded ones
+        const existingSupportUrls = formData.getAll("existingSupport").map(v => v.toString())
         const newSupportData: string[] = []
         for (let i = 0; i < 8; i++) {
             const b64 = formData.get(`optimizedSupport_${i}`)?.toString()
             if (b64) newSupportData.push(b64)
         }
+
+        let finalSupportImages = [...existingSupportUrls]
+
         if (newSupportData.length > 0) {
-            const newUrls: string[] = []
             for (const b64 of newSupportData) {
                 const supName = `${Date.now()}-sup-${Math.random().toString(36).substring(7)}.webp`
                 const supBuffer = Buffer.from(b64.split(",")[1], "base64")
@@ -214,11 +217,13 @@ export async function updateImage(id: string, formData: FormData) {
                 })
                 if (!supErr) {
                     const { data: { publicUrl } } = supabaseAdmin.storage.from("images").getPublicUrl(supName)
-                    newUrls.push(publicUrl)
+                    finalSupportImages.push(publicUrl)
                 }
             }
-            updateData.supportImages = newUrls
         }
+
+        // Always update supportImages as it might have deletions even if no new ones are added
+        updateData.supportImages = finalSupportImages.slice(0, 8)
 
         await prisma.image.update({ where: { id }, data: updateData })
         revalidatePath("/admin/upload")
